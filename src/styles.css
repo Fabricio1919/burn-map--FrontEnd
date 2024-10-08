@@ -1,0 +1,32 @@
+/* Global styles */
+body,
+html {
+  font-family: Arial, sans-serif;
+  height: 100%;
+  margin: 0;
+}
+
+/* Para garantir que o container principal ocupe no máximo 100vh */
+#root {
+  height: 100vh; /* Altura máxima da tela */
+  display: flex;
+  flex-direction: column;
+}
+
+/* Se você tiver um componente de Navbar ou um cabeçalho, ajuste para não sobrepor o conteúdo */
+nav {
+  flex: 0 0 auto; /* Navbar ocupa espaço fixo */
+}
+
+/* Para o conteúdo principal ocupar o restante da tela com margens */
+.main-content {
+  flex: 1; /* O conteúdo ocupará o espaço restante */
+  overflow: auto; /* Permitir rolagem, se necessário */
+  padding: 16px; /* Adicionar preenchimento para espaçamento */
+  box-sizing: border-box; /* Para incluir o preenchimento nas dimensões */
+}
+
+/* Estilo do botão para melhor visualização */
+button {
+  margin: 16px; /* Espaçamento em volta do botão */
+}

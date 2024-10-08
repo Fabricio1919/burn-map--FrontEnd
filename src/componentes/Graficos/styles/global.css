@@ -1,0 +1,30 @@
+.container {
+  max-width: 1200px;
+  padding: 16px;
+  margin: 0 auto;
+}
+
+@media (max-width: 768px) {
+  .container {
+    padding: 8px;
+  }
+
+  .chart-box {
+    width: 100%;
+    margin-bottom: 16px;
+  }
+}
+
+@media (min-width: 769px) and (max-width: 1024px) {
+  .chart-box {
+    width: 48%;
+    margin-bottom: 16px;
+  }
+}
+
+@media (min-width: 1025px) {
+  .chart-box {
+    width: 32%;
+    margin-bottom: 16px;
+  }
+}
