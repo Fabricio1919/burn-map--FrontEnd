@@ -4,7 +4,8 @@ import { Box } from "@chakra-ui/react";
 import "chart.js/auto";
 
 interface Queimada {
-  municipio: string;
+  estado: string;
+  quantidade: number;
 }
 
 interface GraficoPizzaProps {
@@ -13,10 +14,10 @@ interface GraficoPizzaProps {
 
 const GraficoPizza: React.FC<GraficoPizzaProps> = ({ queimadas }) => {
   const data = {
-    labels: queimadas.map((q) => q.municipio),
+    labels: queimadas.map((q) => q.estado),
     datasets: [
       {
-        data: queimadas.map(() => Math.floor(Math.random() * 100) + 50),
+        data: queimadas.map((q) => q.quantidade),
         backgroundColor: [
           "#FF6384",
           "#36A2EB",
@@ -30,8 +31,11 @@ const GraficoPizza: React.FC<GraficoPizzaProps> = ({ queimadas }) => {
   };
 
   return (
-    <Box width="100%" height="400px">
-      <Pie data={data} />
+    <Box className="chart-box" width="100%" height="400px" mb={4}>
+      <Pie
+        data={data}
+        options={{ responsive: true, maintainAspectRatio: false }}
+      />
     </Box>
   );
 };

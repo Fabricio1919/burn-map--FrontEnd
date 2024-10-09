@@ -4,7 +4,8 @@ import { Box } from "@chakra-ui/react";
 import "chart.js/auto";
 
 interface Queimada {
-  municipio: string;
+  estado: string;
+  quantidade: number;
 }
 
 interface GraficoLinhasProps {
@@ -13,11 +14,11 @@ interface GraficoLinhasProps {
 
 const GraficoLinhas: React.FC<GraficoLinhasProps> = ({ queimadas }) => {
   const data = {
-    labels: queimadas.map((q) => q.municipio),
+    labels: queimadas.map((q) => q.estado),
     datasets: [
       {
         label: "Número de Queimadas",
-        data: queimadas.map(() => Math.floor(Math.random() * 100) + 50),
+        data: queimadas.map((q) => q.quantidade),
         fill: false,
         backgroundColor: "rgba(75, 192, 192, 0.6)",
         borderColor: "rgba(75, 192, 192, 1)",
@@ -34,7 +35,7 @@ const GraficoLinhas: React.FC<GraficoLinhasProps> = ({ queimadas }) => {
   };
 
   return (
-    <Box width="100%" height="400px">
+    <Box width="100%" height="400px" mb={4}>
       <Line data={data} options={options} />
     </Box>
   );

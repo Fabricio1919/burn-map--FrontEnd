@@ -4,7 +4,8 @@ import { Box } from "@chakra-ui/react";
 import "chart.js/auto";
 
 interface Queimada {
-  municipio: string;
+  estado: string;
+  quantidade: number;
 }
 
 interface GraficoBarrasProps {
@@ -13,11 +14,11 @@ interface GraficoBarrasProps {
 
 const GraficoBarras: React.FC<GraficoBarrasProps> = ({ queimadas }) => {
   const data = {
-    labels: queimadas.map((q) => q.municipio),
+    labels: queimadas.map((q) => q.estado),
     datasets: [
       {
         label: "Número de Queimadas",
-        data: queimadas.map(() => Math.floor(Math.random() * 100) + 50),
+        data: queimadas.map((q) => q.quantidade),
         backgroundColor: "rgba(75, 192, 192, 0.6)",
       },
     ],
@@ -32,7 +33,7 @@ const GraficoBarras: React.FC<GraficoBarrasProps> = ({ queimadas }) => {
   };
 
   return (
-    <Box width="100%" height="400px">
+    <Box className="chart-box" width="100%" height="400px" mb={4}>
       <Bar data={data} options={options} />
     </Box>
   );
