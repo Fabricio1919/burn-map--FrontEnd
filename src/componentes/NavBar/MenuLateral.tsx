@@ -22,11 +22,11 @@ import { HamburgerIcon } from "@chakra-ui/icons";
 import MapaQueimadas from "../MapaQueimadas";
 import Causas from "../Causes";
 import Conscientizacao from "../Conscientizacao";
-import GraficoBarras from "../Graficos/GraficoBarras";
 import GraficoLinhas from "../Graficos/GraficoLinhas";
 import GraficoPizza from "../Graficos/GraficoPizza";
 import { MdMap, MdAssessment, MdInfo, MdShowChart } from "react-icons/md";
 import { Queimada } from "../../mock/QueimadasData";
+import GraficoBarras from "../Graficos/GraficoBarras";
 
 interface MenuLateralProps {
   queimadas: Queimada[];
@@ -35,13 +35,14 @@ interface MenuLateralProps {
 const MenuLateral: React.FC<MenuLateralProps> = ({ queimadas }) => {
   const { isOpen, onOpen, onClose } = useDisclosure();
   const [activeTab, setActiveTab] = useState<string>("Mapa");
-  const [selectedQueimada, setSelectedQueimada] = useState<Queimada | null>(
-    null
-  );
 
-  const handleQueimadaClick = (queimada: Queimada) => {
-    setSelectedQueimada(queimada);
-    onOpen();
+  const [municipioData, setMunicipioData] = useState<Queimada[]>([]);
+  const [isMunicipioModalOpen, setIsMunicipioModalOpen] = useState(false);
+
+  const handleEstadoClick = (estado: string) => {
+    const municipios = queimadas.filter((q) => q.estado === estado);
+    setMunicipioData(municipios);
+    setIsMunicipioModalOpen(true);
   };
 
   return (
@@ -146,7 +147,7 @@ const MenuLateral: React.FC<MenuLateralProps> = ({ queimadas }) => {
         {activeTab === "Mapa" && (
           <MapaQueimadas
             queimadas={queimadas}
-            onQueimadaClick={handleQueimadaClick}
+            onEstadoClick={handleEstadoClick}
           />
         )}
         {activeTab === "Causas" && <Causas />}
@@ -161,28 +162,26 @@ const MenuLateral: React.FC<MenuLateralProps> = ({ queimadas }) => {
       </div>
 
       <Modal
-        isOpen={!!selectedQueimada}
-        onClose={() => setSelectedQueimada(null)}
+        isOpen={isMunicipioModalOpen}
+        onClose={() => setIsMunicipioModalOpen(false)}
       >
         <ModalOverlay />
         <ModalContent>
-          <ModalHeader>Detalhes da Queimada</ModalHeader>
+          <ModalHeader>Gráfico de Queimadas por Município</ModalHeader>
           <ModalCloseButton />
           <ModalBody>
-            {selectedQueimada && (
-              <VStack spacing={4} align="start">
-                <Text fontWeight="bold">Estado:</Text>
-                <Text>{selectedQueimada.estado}</Text>
-                <Text fontWeight="bold">Dias sem chuva:</Text>
-                <Text>{selectedQueimada.diaSemChuva}</Text>
-                <Text fontWeight="bold">Intensidade:</Text>
-                <Text>{selectedQueimada.intensidade}</Text>
-                <Text fontWeight="bold">Quantidade de queimadas:</Text>
-                <Text>{selectedQueimada.quantidade}</Text>
-                <Text fontWeight="bold">Período:</Text>
-                <Text>{selectedQueimada.periodo}</Text>
-              </VStack>
-            )}
+            <Text fontWeight="bold">Municípios afetados:</Text>
+            <VStack spacing={2} align="start">
+              {municipioData.map((queimada, idx) => (
+                <VStack key={idx} spacing={1} align="start">
+                  {queimada.municipios.map((municipio) => (
+                    <Text key={municipio.nome}>
+                      {municipio.nome}: {municipio.quantidade} queimadas
+                    </Text>
+                  ))}
+                </VStack>
+              ))}
+            </VStack>
           </ModalBody>
         </ModalContent>
       </Modal>

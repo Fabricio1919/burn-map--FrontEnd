@@ -1,19 +1,33 @@
 // MapaQueimadas.tsx
 import React from "react";
-import { Box } from "@chakra-ui/react";
+import { Box, Text } from "@chakra-ui/react";
 import { MapContainer, TileLayer, Polygon, Popup } from "react-leaflet";
 import "leaflet/dist/leaflet.css";
 import { Queimada } from "../mock/QueimadasData";
 
 interface MapaQueimadasProps {
   queimadas: Queimada[];
-  onQueimadaClick: (queimada: Queimada) => void;
+  onEstadoClick: (estado: string) => void;
 }
 
 const MapaQueimadas: React.FC<MapaQueimadasProps> = ({
   queimadas,
-  onQueimadaClick,
+  onEstadoClick,
 }) => {
+  if (!queimadas || queimadas.length === 0) {
+    return (
+      <Box
+        height="85vh"
+        width="100%"
+        display="flex"
+        alignItems="center"
+        justifyContent="center"
+      >
+        <Text fontSize="lg">Nenhuma queimada disponível para exibir.</Text>
+      </Box>
+    );
+  }
+
   return (
     <Box height="85vh" width="100%">
       <MapContainer
@@ -26,13 +40,8 @@ const MapaQueimadas: React.FC<MapaQueimadasProps> = ({
         {queimadas.map((queimada, index) => (
           <Polygon
             key={index}
-            positions={queimada.coords as [number, number][]}
+            positions={queimada.coords}
             pathOptions={{ fillColor: "red", color: "red", weight: 1 }}
-            eventHandlers={{
-              click: () => {
-                onQueimadaClick(queimada);
-              },
-            }}
           >
             <Popup>
               <strong>Estado:</strong> {queimada.estado}
@@ -53,6 +62,9 @@ const MapaQueimadas: React.FC<MapaQueimadasProps> = ({
                   </li>
                 ))}
               </ul>
+              <button onClick={() => onEstadoClick(queimada.estado)}>
+                Ver Gráfico de Municípios
+              </button>
             </Popup>
           </Polygon>
         ))}
