@@ -1,7 +1,7 @@
 import React from "react";
 import { Box, Flex, Text, SimpleGrid, Button } from "@chakra-ui/react";
-import { Pie } from "react-chartjs-2"; // Importando o gráfico de pizza
-import SearchInput from "../SplashScren/Search";
+import { Pie } from "react-chartjs-2"; 
+import SearchInput from "../Search/Search";
 import { QueimadasData } from "../../mock/QueimadasData";
 
 interface Municipio {
@@ -31,7 +31,6 @@ const InformativoCard: React.FC = () => {
     );
   });
 
-  // Configurações do gráfico de pizza para cada estado
   const generatePieChartData = (estadoData: Queimada) => ({
     labels: estadoData.municipios.map((municipio) => municipio.nome),
     datasets: [
@@ -55,7 +54,7 @@ const InformativoCard: React.FC = () => {
         <Button
           ml={4}
           colorScheme={isChartView ? "teal" : "gray"}
-          onClick={() => setIsChartView(!isChartView)} // Alterna entre visualizações
+          onClick={() => setIsChartView(!isChartView)} 
         >
           {isChartView ? "Ver Cards" : "Ver Gráfico de Pizza"}
         </Button>
@@ -75,7 +74,6 @@ const InformativoCard: React.FC = () => {
               <Text fontWeight="bold" fontSize="lg" color="teal.600">
                 {queimada.estado}
               </Text>
-              {/* Ajuste o tamanho do gráfico de pizza para caber melhor */}
               <Box height="300px" width="300px" mx="auto">
                 <Pie data={generatePieChartData(queimada)} />
               </Box>
