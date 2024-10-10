@@ -11,6 +11,7 @@ import GraficoBarras from "./componentes/Graficos/GraficoBarras";
 import GraficoLinhas from "./componentes/Graficos/GraficoLinhas";
 import GraficoPizza from "./componentes/Graficos/GraficoPizza";
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
+import InformativoCard from "./componentes/informacoes/InformativoCard";
 
 const App = () => {
   return (
@@ -26,6 +27,7 @@ const App = () => {
                   path="/"
                   element={<MapaQueimadas queimadas={QueimadasData} />}
                 />
+                <Route path="/InformativoCard" element={<InformativoCard />} />
                 <Route path="/causas" element={<Causas />} />
                 <Route path="/conscientizacao" element={<Conscientizacao />} />
                 <Route path="/graficos">

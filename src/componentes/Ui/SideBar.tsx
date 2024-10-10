@@ -64,6 +64,23 @@ const SideBar: React.FC = () => {
                   Mapa de Queimadas
                 </Button>
               </Link>
+              <Link to="/InformativoCard">
+                <Button
+                  variant="outline"
+                  leftIcon={<MdMap size={20} />}
+                  _hover={{ bg: "gray.600", borderColor: "cyan.400" }}
+                  _active={{ bg: "cyan.500", color: "white" }}
+                  width="full"
+                  borderColor="gray.600"
+                  borderWidth={1}
+                  transition="background-color 0.2s ease, border-color 0.2s ease"
+                  fontSize="sm"
+                  color="white"
+                  justifyContent="flex-start"
+                >
+                  Informativo
+                </Button>
+              </Link>
               <Link to="/causas">
                 <Button
                   variant="outline"
