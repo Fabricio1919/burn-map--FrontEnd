@@ -1,10 +1,8 @@
-// MapaQueimadas.tsx
 import React, { useState } from "react";
 import { Box, Button, Text } from "@chakra-ui/react";
 import { MapContainer, TileLayer, Polygon, Popup } from "react-leaflet";
 import "leaflet/dist/leaflet.css";
-import { Queimada } from "../mock/QueimadasData";
-import GraficoMunicipiosPizza from "./Graficos/GraficoMunicipio";
+
 import {
   Modal,
   ModalOverlay,
@@ -15,6 +13,8 @@ import {
   ModalFooter,
   useDisclosure,
 } from "@chakra-ui/react";
+import GraficoMunicipiosPizza from "../Graficos/GraficoMunicipio";
+import { Queimada } from "../../mock/QueimadasData";
 
 interface Municipio {
   nome: string;
@@ -23,9 +23,13 @@ interface Municipio {
 
 interface MapaQueimadasProps {
   queimadas: Queimada[];
+  onEstadoClick: (estado: string) => void; // Adicionando onEstadoClick
 }
 
-const MapaQueimadas: React.FC<MapaQueimadasProps> = ({ queimadas }) => {
+const MapaQueimadas: React.FC<MapaQueimadasProps> = ({
+  queimadas,
+  onEstadoClick,
+}) => {
   const [municipiosSelecionados, setMunicipiosSelecionados] = useState<
     Municipio[]
   >([]);
@@ -83,6 +87,7 @@ const MapaQueimadas: React.FC<MapaQueimadasProps> = ({ queimadas }) => {
                 onClick={() => {
                   setMunicipiosSelecionados(queimada.municipios);
                   onOpen();
+                  onEstadoClick(queimada.estado); // Chamando onEstadoClick para interação com estado
                 }}
               >
                 Ver Gráfico de Municípios

@@ -1,7 +1,8 @@
 import { Box, Tabs, Card, Flex } from "@chakra-ui/react";
-import Navbar from "./componentes/NavBar/NavBar";
+import Navbar from "./componentes/Ui/NavBar";
 import { QueimadasData } from "./mock/QueimadasData";
-import MenuLateral from "./componentes/NavBar/MenuLateral";
+import SideBar from "./componentes/Ui/SideBar";
+import Footer from "./componentes/Ui/Footer";
 
 const App = () => {
   const queimadas = QueimadasData;
@@ -12,7 +13,8 @@ const App = () => {
         <Tabs variant="soft-rounded" colorScheme="teal">
           <Flex direction="column" height="100vh" gap="1rem">
             <Navbar />
-            <MenuLateral queimadas={QueimadasData} />
+            <SideBar queimadas={QueimadasData} />
+            <Footer />
           </Flex>
         </Tabs>
       </Box>

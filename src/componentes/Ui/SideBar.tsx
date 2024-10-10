@@ -19,20 +19,20 @@ import {
   Text,
 } from "@chakra-ui/react";
 import { HamburgerIcon } from "@chakra-ui/icons";
-import MapaQueimadas from "../MapaQueimadas";
-import Causas from "../Causes";
-import Conscientizacao from "../Conscientizacao";
+import Causas from "../../Pages/Causes";
+import Conscientizacao from "../../Pages/Conscientizacao";
 import GraficoLinhas from "../Graficos/GraficoLinhas";
 import GraficoPizza from "../Graficos/GraficoPizza";
 import { MdMap, MdAssessment, MdInfo, MdShowChart } from "react-icons/md";
 import { Queimada } from "../../mock/QueimadasData";
 import GraficoBarras from "../Graficos/GraficoBarras";
+import MapaQueimadas from "../Map/MapaQueimadas";
 
 interface MenuLateralProps {
   queimadas: Queimada[];
 }
 
-const MenuLateral: React.FC<MenuLateralProps> = ({ queimadas }) => {
+const SideBar: React.FC<MenuLateralProps> = ({ queimadas }) => {
   const { isOpen, onOpen, onClose } = useDisclosure();
   const [activeTab, setActiveTab] = useState<string>("Mapa");
 
@@ -189,4 +189,4 @@ const MenuLateral: React.FC<MenuLateralProps> = ({ queimadas }) => {
   );
 };
 
-export default MenuLateral;
+export default SideBar;
