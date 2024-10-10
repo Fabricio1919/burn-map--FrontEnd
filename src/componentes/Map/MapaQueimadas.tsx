@@ -23,13 +23,9 @@ interface Municipio {
 
 interface MapaQueimadasProps {
   queimadas: Queimada[];
-  onEstadoClick: (estado: string) => void; // Adicionando onEstadoClick
 }
 
-const MapaQueimadas: React.FC<MapaQueimadasProps> = ({
-  queimadas,
-  onEstadoClick,
-}) => {
+const MapaQueimadas: React.FC<MapaQueimadasProps> = ({ queimadas }) => {
   const [municipiosSelecionados, setMunicipiosSelecionados] = useState<
     Municipio[]
   >([]);
@@ -38,8 +34,7 @@ const MapaQueimadas: React.FC<MapaQueimadasProps> = ({
   if (!queimadas || queimadas.length === 0) {
     return (
       <Box
-        height="85vh"
-        width="100%"
+        height="100%"
         display="flex"
         alignItems="center"
         justifyContent="center"
@@ -50,13 +45,13 @@ const MapaQueimadas: React.FC<MapaQueimadasProps> = ({
   }
 
   return (
-    <Box height="85vh" width="100%" position="relative">
+    <Box height="100%" width="100%">
       <MapContainer
         center={[-3.4653, -62.2159]}
         zoom={6}
         style={{ height: "100%", width: "100%" }}
       >
-        <TileLayer url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png" />{" "}
+        <TileLayer url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png" />
         {queimadas.map((queimada, index) => (
           <Polygon
             key={index}
@@ -87,7 +82,6 @@ const MapaQueimadas: React.FC<MapaQueimadasProps> = ({
                 onClick={() => {
                   setMunicipiosSelecionados(queimada.municipios);
                   onOpen();
-                  onEstadoClick(queimada.estado); // Chamando onEstadoClick para interação com estado
                 }}
               >
                 Ver Gráfico de Municípios
