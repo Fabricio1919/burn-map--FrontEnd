@@ -1,4 +1,3 @@
-// GraficoMunicipiosPizza.tsx
 import React from "react";
 import { Pie } from "react-chartjs-2";
 import { Box } from "@chakra-ui/react";

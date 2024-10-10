@@ -70,6 +70,7 @@ const InformativoCard: React.FC = () => {
               borderRadius="lg"
               boxShadow="lg"
               bgGradient="linear(to-br, #f7fafc, #e2e8f0)"
+              textAlign="center"  
             >
               <Text fontWeight="bold" fontSize="lg" color="teal.600">
                 {queimada.estado}
@@ -81,11 +82,10 @@ const InformativoCard: React.FC = () => {
           ))}
         </SimpleGrid>
       ) : (
-        <Flex>
+        <SimpleGrid columns={{ base: 1, md: 2 }} spacing={4}>
           {filteredData.map((queimada, index) => (
             <Box
               key={index}
-              minWidth="300px"
               borderWidth="1px"
               borderRadius="lg"
               overflow="hidden"
@@ -93,6 +93,7 @@ const InformativoCard: React.FC = () => {
               m={2}
               p={4}
               bgGradient="linear(to-br, #f7fafc, #e2e8f0)"
+              textAlign="center"
             >
               <Text fontWeight="bold" fontSize="lg" color="teal.600">
                 {queimada.estado}
@@ -121,7 +122,7 @@ const InformativoCard: React.FC = () => {
               </SimpleGrid>
             </Box>
           ))}
-        </Flex>
+        </SimpleGrid>
       )}
     </Box>
   );

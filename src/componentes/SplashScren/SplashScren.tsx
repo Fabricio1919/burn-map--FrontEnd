@@ -18,7 +18,6 @@ export function SplashScreen() {
 
   return (
     <Box
-      bg="rgb(13, 230, 238)"
       w="100vw"
       h="100vh"
       display="flex"

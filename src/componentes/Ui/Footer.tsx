@@ -9,7 +9,10 @@ const Footer: React.FC = () => {
       bg="blue.500"
       color="white"
       py={4}
-      position="relative"
+      position="fixed" 
+      bottom={0}       
+      left={0}         
+      right={0}   
     >
       <Flex align="center" justify="space-between" mx="auto" px={4}>
         <Text>
@@ -17,7 +20,7 @@ const Footer: React.FC = () => {
           reservados.
         </Text>
         <Flex>
-          <Link href="#" mr={40} color="teal.200">
+          <Link href="#" mr={4} color="teal.200">
             Política de Privacidade
           </Link>
           <Link href="#" color="teal.200">
