@@ -1,26 +1,22 @@
 import React from "react";
-import { Box, Flex, Text, SimpleGrid, Button } from "@chakra-ui/react";
-import { Pie } from "react-chartjs-2"; 
+import { Box, Flex, SimpleGrid, Button, Skeleton } from "@chakra-ui/react";
 import SearchInput from "../Search/Search";
-import { QueimadasData } from "../../mock/QueimadasData";
+import { QueimadasData, Queimada as QueimadaData } from "../../mock/QueimadasData";
+import GraficoBarras from "../Graficos/GraficoGeral";
+import GraficoLinhas from "../Graficos/GraficoLinhas";
+import GraficoMunicipiosPizza from "../Graficos/GraficoMunicipio";
+import GraficoPizza from "../Graficos/GraficoPizza";
+import GraficoPizzaEstado from "../Graficos/GraficoEstado";
 
-interface Municipio {
-  nome: string;
-  quantidade: number;
-}
-
-interface Queimada {
-  estado: string;
-  quantidade: number;
-  diaSemChuva: number;
-  intensidade: number;
-  periodo: string;
-  municipios: Municipio[];
+export interface Queimada extends QueimadaData {
+  diasSemChuvas: number; // Certifique-se de que essa propriedade está correta
 }
 
 const InformativoCard: React.FC = () => {
-  const [isChartView, setIsChartView] = React.useState(false);
+  const [chartType, setChartType] = React.useState("pizza");
   const [searchTerm, setSearchTerm] = React.useState("");
+  const [isLoading, setIsLoading] = React.useState(true);
+
   const filteredData = QueimadasData.filter((queimada) => {
     const lowerCaseSearchTerm = searchTerm.toLowerCase();
     return (
@@ -30,22 +26,15 @@ const InformativoCard: React.FC = () => {
       )
     );
   });
+  
 
-  const generatePieChartData = (estadoData: Queimada) => ({
-    labels: estadoData.municipios.map((municipio) => municipio.nome),
-    datasets: [
-      {
-        label: "Quantidade de Queimadas por Município",
-        data: estadoData.municipios.map((municipio) => municipio.quantidade),
-        backgroundColor: estadoData.municipios.map(
-          () =>
-            `rgba(${Math.random() * 255}, ${Math.random() * 255}, ${
-              Math.random() * 255
-            }, 0.6)`
-        ),
-      },
-    ],
-  });
+  React.useEffect(() => {
+    const timer = setTimeout(() => {
+      setIsLoading(false);
+    }, 2000);
+
+    return () => clearTimeout(timer);
+  }, []);
 
   return (
     <Box py={4} position="relative">
@@ -53,76 +42,64 @@ const InformativoCard: React.FC = () => {
         <SearchInput onSearch={setSearchTerm} />
         <Button
           ml={4}
-          colorScheme={isChartView ? "teal" : "gray"}
-          onClick={() => setIsChartView(!isChartView)} 
+          colorScheme="teal"
+          onClick={() => {
+            setChartType((prev) => {
+              if (prev === "pizza") return "barras";
+              if (prev === "barras") return "linhas";
+              if (prev === "linhas") return "pizzaMunicipios";
+              if (prev === "pizzaMunicipios") return "pizza";
+              return "pizza"; // Valor padrão
+            });
+          }}
         >
-          {isChartView ? "Ver Cards" : "Ver Gráfico de Pizza"}
+          Mudar Gráfico
         </Button>
       </Flex>
 
-      {isChartView ? (
+      {isLoading ? (
         <SimpleGrid columns={{ base: 1, md: 2 }} spacing={4}>
-          {filteredData.map((queimada, index) => (
-            <Box
-              key={index}
-              p={4}
-              borderWidth="1px"
-              borderRadius="lg"
-              boxShadow="lg"
-              bgGradient="linear(to-br, #f7fafc, #e2e8f0)"
-              textAlign="center"  
-            >
-              <Text fontWeight="bold" fontSize="lg" color="teal.600">
-                {queimada.estado}
-              </Text>
-              <Box height="300px" width="300px" mx="auto">
-                <Pie data={generatePieChartData(queimada)} />
-              </Box>
+          {Array.from({ length: 4 }).map((_, index) => (
+            <Box key={index} p={4} borderWidth="1px" borderRadius="lg" boxShadow="lg">
+              <Skeleton height="20px" mb={2} />
+              <Skeleton height="300px" />
             </Box>
           ))}
         </SimpleGrid>
       ) : (
-        <SimpleGrid columns={{ base: 1, md: 2 }} spacing={4}>
-          {filteredData.map((queimada, index) => (
-            <Box
-              key={index}
-              borderWidth="1px"
-              borderRadius="lg"
-              overflow="hidden"
-              boxShadow="lg"
-              m={2}
-              p={4}
-              bgGradient="linear(to-br, #f7fafc, #e2e8f0)"
-              textAlign="center"
-            >
-              <Text fontWeight="bold" fontSize="lg" color="teal.600">
-                {queimada.estado}
-              </Text>
-              <Text>
-                <strong>Quantidade de Queimadas:</strong> {queimada.quantidade}
-              </Text>
-              <Text>
-                <strong>Dias sem chuva:</strong> {queimada.diaSemChuva}
-              </Text>
-              <Text>
-                <strong>Intensidade:</strong> {queimada.intensidade}
-              </Text>
-              <Text>
-                <strong>Período:</strong> {queimada.periodo}
-              </Text>
-              <Text fontWeight="bold" mt={4} color="teal.600">
-                Municípios Atingidos:
-              </Text>
-              <SimpleGrid columns={1} spacing={2}>
-                {queimada.municipios.map((municipio, index) => (
-                  <Text key={index}>
-                    {municipio.nome} - {municipio.quantidade} queimadas
-                  </Text>
-                ))}
-              </SimpleGrid>
-            </Box>
-          ))}
-        </SimpleGrid>
+        <Box>
+          {chartType === "pizza" && (
+            <SimpleGrid columns={{ base: 1, md: 2 }} spacing={4}>
+              {filteredData.map((queimada, index) => (
+                <GraficoPizzaEstado key={index} queimada={queimada} />
+              ))}
+            </SimpleGrid>
+          )}
+
+          {chartType === "barras" && (
+            <GraficoBarras queimadas={filteredData} isLoading={isLoading} />
+          )}
+
+          {chartType === "linhas" && (
+            <GraficoLinhas queimadas={filteredData} isLoading={isLoading} />
+          )}
+
+          {chartType === "pizzaMunicipios" && (
+            <SimpleGrid columns={{ base: 1, md: 2 }} spacing={4}>
+              {filteredData.map((queimada, index) => (
+                <GraficoMunicipiosPizza
+                  key={index}
+                  municipios={queimada.municipios}
+                  isLoading={isLoading}
+                />
+              ))}
+            </SimpleGrid>
+          )}
+
+          {chartType === "pizza" && (
+            <GraficoPizza queimadas={filteredData} isLoading={isLoading} />
+          )}
+        </Box>
       )}
     </Box>
   );

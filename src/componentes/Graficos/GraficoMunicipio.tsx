@@ -1,6 +1,6 @@
 import React from "react";
 import { Pie } from "react-chartjs-2";
-import { Box } from "@chakra-ui/react";
+import { Box, Skeleton } from "@chakra-ui/react";
 import "chart.js/auto";
 
 interface Municipio {
@@ -10,10 +10,12 @@ interface Municipio {
 
 interface GraficoMunicipiosPizzaProps {
   municipios: Municipio[];
+  isLoading: boolean;
 }
 
 const GraficoMunicipiosPizza: React.FC<GraficoMunicipiosPizzaProps> = ({
   municipios,
+  isLoading,
 }) => {
   const data = {
     labels: municipios.map((m) => m.nome),
@@ -34,10 +36,11 @@ const GraficoMunicipiosPizza: React.FC<GraficoMunicipiosPizzaProps> = ({
 
   return (
     <Box className="chart-box" width="100%" height="400px" mb={4}>
-      <Pie
-        data={data}
-        options={{ responsive: true, maintainAspectRatio: false }}
-      />
+      {isLoading ? (
+        <Skeleton height="400px" />
+      ) : (
+        <Pie data={data} options={{ responsive: true, maintainAspectRatio: false }} />
+      )}
     </Box>
   );
 };

@@ -1,6 +1,6 @@
 import React from "react";
 import { Pie } from "react-chartjs-2";
-import { Box } from "@chakra-ui/react";
+import { Box, Skeleton } from "@chakra-ui/react";
 import "chart.js/auto";
 
 interface Queimada {
@@ -10,9 +10,10 @@ interface Queimada {
 
 interface GraficoPizzaProps {
   queimadas: Queimada[];
+  isLoading: boolean; // Adicionado para controle de carregamento
 }
 
-const GraficoPizza: React.FC<GraficoPizzaProps> = ({ queimadas }) => {
+const GraficoPizza: React.FC<GraficoPizzaProps> = ({ queimadas, isLoading }) => {
   const data = {
     labels: queimadas.map((q) => q.estado),
     datasets: [
@@ -32,10 +33,14 @@ const GraficoPizza: React.FC<GraficoPizzaProps> = ({ queimadas }) => {
 
   return (
     <Box className="chart-box" width="100%" height="400px" mb={4}>
-      <Pie
-        data={data}
-        options={{ responsive: true, maintainAspectRatio: false }}
-      />
+      {isLoading ? (
+        <Skeleton height="400px" />
+      ) : (
+        <Pie
+          data={data}
+          options={{ responsive: true, maintainAspectRatio: false }}
+        />
+      )}
     </Box>
   );
 };

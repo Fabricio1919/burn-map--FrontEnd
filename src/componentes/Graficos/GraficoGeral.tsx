@@ -1,6 +1,6 @@
 import React from "react";
-import { Line } from "react-chartjs-2";
-import { Box, Skeleton } from "@chakra-ui/react";
+import { Bar } from "react-chartjs-2";
+import { Box, Skeleton, Text } from "@chakra-ui/react";
 import "chart.js/auto";
 
 interface Queimada {
@@ -8,22 +8,21 @@ interface Queimada {
   quantidade: number;
 }
 
-interface GraficoDiasSemChuvasProps {
+interface GraficoGeralProps {
   queimadas: Queimada[];
   isLoading: boolean; // Adicionado para controle de carregamento
 }
 
-const GraficoDiasSemChuvas: React.FC<GraficoDiasSemChuvasProps> = ({ queimadas, isLoading }) => {
+const GraficoGeral: React.FC<GraficoGeralProps> = ({ queimadas, isLoading }) => {
   const data = {
     labels: queimadas.map((q) => q.estado),
     datasets: [
       {
         label: "Número de Queimadas",
         data: queimadas.map((q) => q.quantidade),
-        fill: false,
-        backgroundColor: "rgba(75, 192, 192, 0.6)",
-        borderColor: "rgba(75, 192, 192, 1)",
-        tension: 0.1, // Ajusta a suavização da linha
+        backgroundColor: queimadas.map(() =>
+          `rgba(${Math.random() * 255}, ${Math.random() * 255}, ${Math.random() * 255}, 0.6)`
+        ),
       },
     ],
   };
@@ -36,24 +35,24 @@ const GraficoDiasSemChuvas: React.FC<GraficoDiasSemChuvasProps> = ({ queimadas, 
     },
     plugins: {
       legend: {
-        position: "top" as const, // Usando 'as const' para garantir o tipo correto
+        position: "top" as const, 
       },
       title: {
         display: true,
-        text: "Tendência de Queimadas por Estado",
+        text: "Número de Queimadas por Estado",
       },
     },
   };
 
   return (
-    <Box width="100%" height="400px" mb={4}>
+    <Box className="chart-box" width="100%" height="400px" mb={4}>
       {isLoading ? (
         <Skeleton height="400px" />
       ) : (
-        <Line data={data} options={options} />
+        <Bar data={data} options={options} />
       )}
     </Box>
   );
 };
 
-export default GraficoDiasSemChuvas;
+export default GraficoGeral;
