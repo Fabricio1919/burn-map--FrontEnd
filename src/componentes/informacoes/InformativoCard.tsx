@@ -50,7 +50,8 @@ const InformativoCard: React.FC = () => {
               if (prev === "Estado") return "geral";
               if (prev === "geral") return "diasSemChuvas";
               if (prev === "diasSemChuvas") return "Municipios";
-              if (prev === "Municipios") return "Estado";
+              if (prev === "Municipios") return "GraficoPizza";
+              if (prev === "GraficoPizza") return "Estado";
               return "Estado";
             });
           }}
@@ -99,18 +100,6 @@ const InformativoCard: React.FC = () => {
             <SimpleGrid columns={{ base: 1, md: 2 }} spacing={4}>
               {filteredData.map((queimada, index) => (
                 <GraficoMunicipios key={index} queimada={queimada} />
-              ))}
-            </SimpleGrid>
-          )}
-
-          {chartType === "GraficoPizza" && (
-            <SimpleGrid columns={{ base: 1, md: 2 }} spacing={4}>
-              {filteredData.map((queimada, index) => (
-                <GraficoPizza
-                  key={index}
-                  municipios={queimada.municipios}
-                  isLoading={isLoading}
-                />
               ))}
             </SimpleGrid>
           )}
