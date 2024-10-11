@@ -1,48 +1,50 @@
+// src/components/Graficos/GraficoPizzaEstado.tsx
 import React from "react";
+import { Box, Text } from "@chakra-ui/react";
 import { Pie } from "react-chartjs-2";
-import { Box, Skeleton } from "@chakra-ui/react";
-import "chart.js/auto";
+import { Queimada } from "../../mock/QueimadasData";
 
-interface Municipio {
-  nome: string;
-  quantidade: number;
+interface GraficoEstadoProps {
+  queimada: Queimada;
 }
 
-interface GraficoMunicipiosPizzaProps {
-  municipios: Municipio[];
-  isLoading: boolean;
-}
-
-const GraficoMunicipiosPizza: React.FC<GraficoMunicipiosPizzaProps> = ({
-  municipios,
-  isLoading,
-}) => {
-  const data = {
-    labels: municipios.map((m) => m.nome),
-    datasets: [
-      {
-        data: municipios.map((m) => m.quantidade),
-        backgroundColor: [
-          "#FF6384",
-          "#36A2EB",
-          "#FFCE56",
-          "#4BC0C0",
-          "#9966FF",
-          "#FF9F40",
-        ],
-      },
-    ],
+const GraficoMunicipios: React.FC<GraficoEstadoProps> = ({ queimada }) => {
+  const generatePieChartData = () => {
+    return {
+      labels: queimada.municipios.map((municipio) => municipio.nome),
+      datasets: [
+        {
+          data: queimada.municipios.map((municipio) => municipio.quantidade),
+          backgroundColor: [
+            "#FF6384",
+            "#36A2EB",
+            "#FFCE56",
+            "#4BC0C0",
+            "#9966FF",
+            "#FF9F40",
+          ],
+        },
+      ],
+    };
   };
 
   return (
-    <Box className="chart-box" width="100%" height="400px" mb={4}>
-      {isLoading ? (
-        <Skeleton height="400px" />
-      ) : (
-        <Pie data={data} options={{ responsive: true, maintainAspectRatio: false }} />
-      )}
+    <Box
+      p={4}
+      borderWidth="1px"
+      borderRadius="lg"
+      boxShadow="lg"
+      bgGradient="linear(to-br, #f7fafc, #e2e8f0)"
+      textAlign="center"
+    >
+      <Text fontWeight="bold" fontSize="lg" color="teal.600">
+        {queimada.estado}
+      </Text>
+      <Box height="300px" width="300px" mx="auto">
+        <Pie data={generatePieChartData()} />
+      </Box>
     </Box>
   );
 };
 
-export default GraficoMunicipiosPizza;
+export default GraficoMunicipios;

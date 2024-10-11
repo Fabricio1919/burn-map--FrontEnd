@@ -4,11 +4,11 @@ import { Box, Text } from "@chakra-ui/react";
 import { Pie } from "react-chartjs-2";
 import { Queimada } from "../../mock/QueimadasData";
 
-interface GraficoPizzaEstadoProps {
+interface GraficoEstadoProps {
   queimada: Queimada;
 }
 
-const GraficoPizzaEstado: React.FC<GraficoPizzaEstadoProps> = ({ queimada }) => {
+const GraficoEstado: React.FC<GraficoEstadoProps> = ({ queimada }) => {
   const generatePieChartData = () => {
     return {
       labels: queimada.municipios.map((municipio) => municipio.nome),
@@ -29,7 +29,14 @@ const GraficoPizzaEstado: React.FC<GraficoPizzaEstadoProps> = ({ queimada }) => 
   };
 
   return (
-    <Box p={4} borderWidth="1px" borderRadius="lg" boxShadow="lg" bgGradient="linear(to-br, #f7fafc, #e2e8f0)" textAlign="center">
+    <Box
+      p={4}
+      borderWidth="1px"
+      borderRadius="lg"
+      boxShadow="lg"
+      bgGradient="linear(to-br, #f7fafc, #e2e8f0)"
+      textAlign="center"
+    >
       <Text fontWeight="bold" fontSize="lg" color="teal.600">
         {queimada.estado}
       </Text>
@@ -40,4 +47,4 @@ const GraficoPizzaEstado: React.FC<GraficoPizzaEstadoProps> = ({ queimada }) => 
   );
 };
 
-export default GraficoPizzaEstado;
+export default GraficoEstado;

@@ -3,22 +3,25 @@ import { Pie } from "react-chartjs-2";
 import { Box, Skeleton } from "@chakra-ui/react";
 import "chart.js/auto";
 
-interface Queimada {
-  estado: string;
+interface Municipio {
+  nome: string;
   quantidade: number;
 }
 
 interface GraficoPizzaProps {
-  queimadas: Queimada[];
-  isLoading: boolean; // Adicionado para controle de carregamento
+  municipios: Municipio[];
+  isLoading: boolean;
 }
 
-const GraficoPizza: React.FC<GraficoPizzaProps> = ({ queimadas, isLoading }) => {
+const GraficoPizza: React.FC<GraficoPizzaProps> = ({
+  municipios,
+  isLoading,
+}) => {
   const data = {
-    labels: queimadas.map((q) => q.estado),
+    labels: municipios.map((m) => m.nome),
     datasets: [
       {
-        data: queimadas.map((q) => q.quantidade),
+        data: municipios.map((m) => m.quantidade),
         backgroundColor: [
           "#FF6384",
           "#36A2EB",

@@ -9,14 +9,12 @@ import MapaQueimadas from "./componentes/Map/MapaQueimadas";
 import Causas from "./Pages/Causes";
 import Conscientizacao from "./Pages/Conscientizacao";
 import GraficoBarras from "./componentes/Graficos/GraficoGeral";
-import GraficoLinhas from "./componentes/Graficos/GraficoLinhas";
-import GraficoPizza from "./componentes/Graficos/GraficoPizza";
 import InformativoCard from "./componentes/informacoes/InformativoCard";
 import { SplashScreen } from "./componentes/SplashScren/SplashScren";
 
 const App = () => {
   const [showSplash, setShowSplash] = useState(true);
-  const [isLoading, setIsLoading] = useState(true); 
+  const [isLoading, setIsLoading] = useState(true);
 
   const startTimer = () => {
     setTimeout(() => {
@@ -30,9 +28,9 @@ const App = () => {
     } else {
       const timer = setTimeout(() => {
         setIsLoading(false);
-      }, 500); 
+      }, 500);
 
-      return () => clearTimeout(timer); 
+      return () => clearTimeout(timer);
     }
   }, [showSplash]);
 
@@ -53,23 +51,18 @@ const App = () => {
                   path="/"
                   element={<MapaQueimadas queimadas={QueimadasData} />}
                 />
-                <Route path="/InformativoCard" element={<InformativoCard />} /> 
+                <Route path="/InformativoCard" element={<InformativoCard />} />
                 <Route path="/causas" element={<Causas />} />
                 <Route path="/conscientizacao" element={<Conscientizacao />} />
-                <Route path="/graficos">
-                  <Route
-                    index
-                    element={<GraficoBarras queimadas={QueimadasData} isLoading={isLoading} />}
-                  />
-                  <Route
-                    path="linhas"
-                    element={<GraficoLinhas queimadas={QueimadasData} isLoading={isLoading} />}
-                  />
-                  <Route
-                    path="pizza"
-                    element={<GraficoPizza queimadas={QueimadasData} isLoading={isLoading}/>}
-                  />
-                </Route>
+                <Route
+                  path="/graficos"
+                  element={
+                    <GraficoBarras
+                      queimadas={QueimadasData}
+                      isLoading={isLoading}
+                    />
+                  }
+                />
               </Routes>
             </Box>
             <Footer />

@@ -5,7 +5,7 @@ import "chart.js/auto";
 
 interface Queimada {
   estado: string;
-  quantidade: number;
+  diaSemChuva: number;
 }
 
 interface GraficoDiasSemChuvasProps {
@@ -13,13 +13,16 @@ interface GraficoDiasSemChuvasProps {
   isLoading: boolean; // Adicionado para controle de carregamento
 }
 
-const GraficoDiasSemChuvas: React.FC<GraficoDiasSemChuvasProps> = ({ queimadas, isLoading }) => {
+const GraficoDiasSemChuvas: React.FC<GraficoDiasSemChuvasProps> = ({
+  queimadas,
+  isLoading,
+}) => {
   const data = {
-    labels: queimadas.map((q) => q.estado),
+    labels: queimadas.map((q) => q.estado), // Estados no eixo X
     datasets: [
       {
-        label: "Número de Queimadas",
-        data: queimadas.map((q) => q.quantidade),
+        label: "Dias sem Chuva",
+        data: queimadas.map((q) => q.diaSemChuva), // Dias sem chuva no eixo Y
         fill: false,
         backgroundColor: "rgba(75, 192, 192, 0.6)",
         borderColor: "rgba(75, 192, 192, 1)",
@@ -40,7 +43,7 @@ const GraficoDiasSemChuvas: React.FC<GraficoDiasSemChuvasProps> = ({ queimadas, 
       },
       title: {
         display: true,
-        text: "Tendência de Queimadas por Estado",
+        text: "Dias sem Chuva por Estado",
       },
     },
   };

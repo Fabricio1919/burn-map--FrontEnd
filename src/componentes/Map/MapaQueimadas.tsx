@@ -13,22 +13,17 @@ import {
   ModalFooter,
   useDisclosure,
 } from "@chakra-ui/react";
-import GraficoMunicipiosPizza from "../Graficos/GraficoMunicipio";
-import { Queimada } from "../../mock/QueimadasData";
 
-interface Municipio {
-  nome: string;
-  quantidade: number;
-}
+import { Queimada } from "../../mock/QueimadasData";
+import GraficoMunicipios from "../Graficos/GraficoMunicipio";
 
 interface MapaQueimadasProps {
   queimadas: Queimada[];
 }
 
 const MapaQueimadas: React.FC<MapaQueimadasProps> = ({ queimadas }) => {
-  const [municipiosSelecionados, setMunicipiosSelecionados] = useState<
-    Municipio[]
-  >([]);
+  const [queimadaSelecionada, setQueimadaSelecionada] =
+    useState<Queimada | null>(null);
   const { isOpen, onOpen, onClose } = useDisclosure();
 
   if (!queimadas || queimadas.length === 0) {
@@ -80,7 +75,7 @@ const MapaQueimadas: React.FC<MapaQueimadasProps> = ({ queimadas }) => {
               <Button
                 colorScheme="blue"
                 onClick={() => {
-                  setMunicipiosSelecionados(queimada.municipios);
+                  setQueimadaSelecionada(queimada);
                   onOpen();
                 }}
               >
@@ -91,21 +86,23 @@ const MapaQueimadas: React.FC<MapaQueimadasProps> = ({ queimadas }) => {
         ))}
       </MapContainer>
 
-      <Modal isOpen={isOpen} onClose={onClose} isCentered>
-        <ModalOverlay />
-        <ModalContent>
-          <ModalHeader>Gráfico de Municípios</ModalHeader>
-          <ModalCloseButton />
-          <ModalBody>
-            <GraficoMunicipiosPizza municipios={municipiosSelecionados} />
-          </ModalBody>
-          <ModalFooter>
-            <Button colorScheme="red" onClick={onClose}>
-              Fechar
-            </Button>
-          </ModalFooter>
-        </ModalContent>
-      </Modal>
+      {queimadaSelecionada && (
+        <Modal isOpen={isOpen} onClose={onClose} isCentered>
+          <ModalOverlay />
+          <ModalContent>
+            <ModalHeader>Gráfico de Municípios</ModalHeader>
+            <ModalCloseButton />
+            <ModalBody>
+              <GraficoMunicipios queimada={queimadaSelecionada} />
+            </ModalBody>
+            <ModalFooter>
+              <Button colorScheme="red" onClick={onClose}>
+                Fechar
+              </Button>
+            </ModalFooter>
+          </ModalContent>
+        </Modal>
+      )}
     </Box>
   );
 };
