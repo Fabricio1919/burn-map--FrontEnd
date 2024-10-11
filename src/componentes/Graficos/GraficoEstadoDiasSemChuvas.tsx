@@ -1,6 +1,6 @@
 import React from "react";
 import { Line } from "react-chartjs-2";
-import { Box, Skeleton } from "@chakra-ui/react";
+import { Box } from "@chakra-ui/react";
 import "chart.js/auto";
 
 interface Queimada {
@@ -10,23 +10,21 @@ interface Queimada {
 
 interface GraficoDiasSemChuvasProps {
   queimadas: Queimada[];
-  isLoading: boolean; // Adicionado para controle de carregamento
 }
 
 const GraficoDiasSemChuvas: React.FC<GraficoDiasSemChuvasProps> = ({
   queimadas,
-  isLoading,
 }) => {
   const data = {
-    labels: queimadas.map((q) => q.estado), // Estados no eixo X
+    labels: queimadas.map((q) => q.estado),
     datasets: [
       {
         label: "Dias sem Chuva",
-        data: queimadas.map((q) => q.diaSemChuva), // Dias sem chuva no eixo Y
+        data: queimadas.map((q) => q.diaSemChuva),
         fill: false,
         backgroundColor: "rgba(75, 192, 192, 0.6)",
         borderColor: "rgba(75, 192, 192, 1)",
-        tension: 0.1, // Ajusta a suavização da linha
+        tension: 0.1,
       },
     ],
   };
@@ -39,7 +37,7 @@ const GraficoDiasSemChuvas: React.FC<GraficoDiasSemChuvasProps> = ({
     },
     plugins: {
       legend: {
-        position: "top" as const, // Usando 'as const' para garantir o tipo correto
+        position: "top" as const,
       },
       title: {
         display: true,
@@ -50,11 +48,7 @@ const GraficoDiasSemChuvas: React.FC<GraficoDiasSemChuvasProps> = ({
 
   return (
     <Box width="100%" height="400px" mb={4}>
-      {isLoading ? (
-        <Skeleton height="400px" />
-      ) : (
-        <Line data={data} options={options} />
-      )}
+      <Line data={data} options={options} />
     </Box>
   );
 };

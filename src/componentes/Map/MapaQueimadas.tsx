@@ -2,7 +2,6 @@ import React, { useState } from "react";
 import { Box, Button, Text } from "@chakra-ui/react";
 import { MapContainer, TileLayer, Polygon, Popup } from "react-leaflet";
 import "leaflet/dist/leaflet.css";
-
 import {
   Modal,
   ModalOverlay,
@@ -16,6 +15,7 @@ import {
 
 import { Queimada } from "../../mock/QueimadasData";
 import GraficoMunicipios from "../Graficos/GraficoMunicipio";
+import ChatDenuncias from "./Charts/ChatDenuncias";
 
 interface MapaQueimadasProps {
   queimadas: Queimada[];
@@ -40,7 +40,7 @@ const MapaQueimadas: React.FC<MapaQueimadasProps> = ({ queimadas }) => {
   }
 
   return (
-    <Box height="100%" width="100%">
+    <Box height="90%" width="100%" position="relative">
       <MapContainer
         center={[-3.4653, -62.2159]}
         zoom={6}
@@ -51,36 +51,49 @@ const MapaQueimadas: React.FC<MapaQueimadasProps> = ({ queimadas }) => {
           <Polygon
             key={index}
             positions={queimada.coords}
-            pathOptions={{ fillColor: "red", color: "red", weight: 1 }}
+            pathOptions={{
+              fillColor: "red",
+              color: "red",
+              weight: 1,
+              fillOpacity: 0.7,
+            }}
           >
             <Popup>
-              <strong>Estado:</strong> {queimada.estado}
-              <br />
-              <strong>Dias sem chuva:</strong> {queimada.diaSemChuva}
-              <br />
-              <strong>Intensidade:</strong> {queimada.intensidade}
-              <br />
-              <strong>Quantidade de queimadas:</strong> {queimada.quantidade}
-              <br />
-              <strong>Período:</strong> {queimada.periodo}
-              <br />
-              <strong>Municípios afetados:</strong>
-              <ul>
-                {queimada.municipios.map((municipio, idx) => (
-                  <li key={idx}>
-                    {municipio.nome}: {municipio.quantidade} queimadas
-                  </li>
-                ))}
-              </ul>
-              <Button
-                colorScheme="blue"
-                onClick={() => {
-                  setQueimadaSelecionada(queimada);
-                  onOpen();
-                }}
+              <Box
+                p={3}
+                bg="white"
+                borderRadius="md"
+                boxShadow="md"
+                _hover={{ color: "green.600", transform: "scale(1.05)" }}
+                transition="0.2s"
               >
-                Ver Gráfico de Municípios
-              </Button>
+                <Text fontWeight="bold">
+                  <strong>Estado:</strong> {queimada.estado}
+                </Text>
+                <Text fontWeight="bold">
+                  <strong>Dias sem chuva:</strong> {queimada.diaSemChuva}
+                </Text>
+                <Text fontWeight="bold">
+                  <strong>Intensidade:</strong> {queimada.intensidade}
+                </Text>
+                <Text fontWeight="bold">
+                  <strong>Quantidade de queimadas:</strong>{" "}
+                  {queimada.quantidade}
+                </Text>
+                <Text fontWeight="bold">
+                  <strong>Período:</strong> {queimada.periodo}
+                </Text>
+                <Button
+                  colorScheme="blue"
+                  mt={2}
+                  onClick={() => {
+                    setQueimadaSelecionada(queimada);
+                    onOpen();
+                  }}
+                >
+                  Ver Gráfico de Municípios
+                </Button>
+              </Box>
             </Popup>
           </Polygon>
         ))}
@@ -103,6 +116,10 @@ const MapaQueimadas: React.FC<MapaQueimadasProps> = ({ queimadas }) => {
           </ModalContent>
         </Modal>
       )}
+
+      <Box position="absolute" bottom="0" right="0" zIndex="1000">
+        <ChatDenuncias />
+      </Box>
     </Box>
   );
 };

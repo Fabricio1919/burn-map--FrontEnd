@@ -1,6 +1,6 @@
 import React from "react";
 import { Bar } from "react-chartjs-2";
-import { Box, Skeleton, Text } from "@chakra-ui/react";
+import { Box, Skeleton } from "@chakra-ui/react";
 import "chart.js/auto";
 
 interface Queimada {
@@ -10,18 +10,24 @@ interface Queimada {
 
 interface GraficoGeralProps {
   queimadas: Queimada[];
-  isLoading: boolean; // Adicionado para controle de carregamento
+  isLoading: boolean;
 }
 
-const GraficoGeral: React.FC<GraficoGeralProps> = ({ queimadas, isLoading }) => {
+const GraficoGeral: React.FC<GraficoGeralProps> = ({
+  queimadas,
+  isLoading,
+}) => {
   const data = {
     labels: queimadas.map((q) => q.estado),
     datasets: [
       {
         label: "Número de Queimadas",
         data: queimadas.map((q) => q.quantidade),
-        backgroundColor: queimadas.map(() =>
-          `rgba(${Math.random() * 255}, ${Math.random() * 255}, ${Math.random() * 255}, 0.6)`
+        backgroundColor: queimadas.map(
+          () =>
+            `rgba(${Math.random() * 255}, ${Math.random() * 255}, ${
+              Math.random() * 255
+            }, 0.6)`
         ),
       },
     ],
@@ -35,7 +41,7 @@ const GraficoGeral: React.FC<GraficoGeralProps> = ({ queimadas, isLoading }) => 
     },
     plugins: {
       legend: {
-        position: "top" as const, 
+        position: "top" as const,
       },
       title: {
         display: true,

@@ -7,16 +7,16 @@ import {
 } from "../../mock/QueimadasData";
 import GraficoBarras from "../Graficos/GraficoGeral";
 import GraficoMunicipios from "../Graficos/GraficoMunicipio";
-import GraficoPizza from "../Graficos/GraficoPizza";
-import GraficoPizzaEstado from "../Graficos/GraficoEstado";
-import GraficoDiasSemChuvas from "../Graficos/GraficoDiasSemChuvas";
+import GraficoEstadoQueimada from "../Graficos/GraficoEstadoQueimada";
+import GraficoDiasSemChuvas from "../Graficos/GraficoEstadoDiasSemChuvas";
+import GraficoIntensidade from "../Graficos/GraficoIntensidade";
 
 export interface Queimada extends QueimadaData {
   diasSemChuvas: number;
 }
 
 const InformativoCard: React.FC = () => {
-  const [chartType, setChartType] = React.useState("Estado");
+  const [chartType, setChartType] = React.useState("geral");
   const [searchTerm, setSearchTerm] = React.useState("");
   const [isLoading, setIsLoading] = React.useState(true);
 
@@ -47,12 +47,12 @@ const InformativoCard: React.FC = () => {
           colorScheme="teal"
           onClick={() => {
             setChartType((prev) => {
-              if (prev === "Estado") return "geral";
               if (prev === "geral") return "diasSemChuvas";
-              if (prev === "diasSemChuvas") return "Municipios";
-              if (prev === "Municipios") return "GraficoPizza";
-              if (prev === "GraficoPizza") return "Estado";
-              return "Estado";
+              if (prev === "diasSemChuvas") return "queimada";
+              if (prev === "queimada") return "Municipios";
+              if (prev === "Municipios") return "queimada";
+              if (prev === "queimada") return "geral";
+              return "geral";
             });
           }}
         >
@@ -77,23 +77,18 @@ const InformativoCard: React.FC = () => {
         </SimpleGrid>
       ) : (
         <Box>
-          {chartType === "Estado" && (
-            <SimpleGrid columns={{ base: 1, md: 2 }} spacing={4}>
-              {filteredData.map((queimada, index) => (
-                <GraficoPizzaEstado key={index} queimada={queimada} />
-              ))}
-            </SimpleGrid>
-          )}
-
           {chartType === "geral" && (
             <GraficoBarras queimadas={filteredData} isLoading={isLoading} />
           )}
 
           {chartType === "diasSemChuvas" && (
-            <GraficoDiasSemChuvas
-              queimadas={filteredData}
-              isLoading={isLoading}
-            />
+            <GraficoDiasSemChuvas queimadas={filteredData} />
+          )}
+
+          {chartType === "queimada" && (
+            <SimpleGrid columns={{ base: 1, md: 2 }} spacing={4}>
+              <GraficoEstadoQueimada queimada={filteredData} />
+            </SimpleGrid>
           )}
 
           {chartType === "Municipios" && (
@@ -104,14 +99,10 @@ const InformativoCard: React.FC = () => {
             </SimpleGrid>
           )}
 
-          {chartType === "GraficoPizza" && (
+          {chartType === "Intensidade" && (
             <SimpleGrid columns={{ base: 1, md: 2 }} spacing={4}>
               {filteredData.map((queimada, index) => (
-                <GraficoPizza
-                  key={index}
-                  municipios={queimada.municipios}
-                  isLoading={isLoading}
-                />
+                <GraficoIntensidade key={index} queimada={queimada} />
               ))}
             </SimpleGrid>
           )}
