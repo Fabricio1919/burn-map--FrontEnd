@@ -1,4 +1,3 @@
-// src/components/Graficos/GraficoPizzaEstado.tsx
 import React from "react";
 import { Box, Text } from "@chakra-ui/react";
 import { Pie } from "react-chartjs-2";
@@ -9,8 +8,8 @@ interface GraficoEstadoProps {
 }
 
 const GraficoMunicipios: React.FC<GraficoEstadoProps> = ({ queimada }) => {
-  const generatePieChartData = () => {
-    return {
+  const data =  {
+ 
       labels: queimada.municipios.map((municipio) => municipio.nome),
       datasets: [
         {
@@ -25,8 +24,11 @@ const GraficoMunicipios: React.FC<GraficoEstadoProps> = ({ queimada }) => {
           ],
         },
       ],
-    };
+    
   };
+
+
+
 
   return (
     <Box
@@ -37,11 +39,14 @@ const GraficoMunicipios: React.FC<GraficoEstadoProps> = ({ queimada }) => {
       bgGradient="linear(to-br, #f7fafc, #e2e8f0)"
       textAlign="center"
     >
+      <Text fontWeight="bold" >
+      Queimadas por Estado / Municipio
+      </Text>
       <Text fontWeight="bold" fontSize="lg" color="teal.600">
         {queimada.estado}
       </Text>
       <Box height="300px" width="300px" mx="auto">
-        <Pie data={generatePieChartData()} />
+        <Pie data={data}  />
       </Box>
     </Box>
   );

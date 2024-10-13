@@ -1,4 +1,3 @@
-// ChatDenuncias.tsx
 import React, { useState } from "react";
 import {
   Box,
@@ -59,7 +58,6 @@ const ChatDenuncias: React.FC = () => {
             maxHeight="200px"
             overflowY="scroll"
             spacing={2}
-            // bg="gray.600"
             p={2}
             borderRadius="md"
             width="100%"

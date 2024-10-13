@@ -5,54 +5,72 @@ import { Box } from "@chakra-ui/react";
 import { Queimada } from "../../mock/QueimadasData";
 
 interface GraficoIntensidadeProps {
-  queimada: Queimada;
+  queimadas: Queimada[];
 }
 
 const GraficoIntensidade: React.FC<GraficoIntensidadeProps> = ({
-  queimada,
+  queimadas,
 }) => {
+  const labels = queimadas.map((q) => q.estado);
+  const intensityData = queimadas.map((q) => {
+    switch (q.intensidade) {
+      case "baixo":
+        return 1; 
+      case "médio":
+        return 2; 
+      case "alto":
+        return 3; 
+      default:
+        return 0; 
+    }
+  });
+
   const data = {
-    labels: queimada.municipios.map((municipio) => municipio.nome),
+    labels,
     datasets: [
       {
         label: "Intensidade das Queimadas",
-        data: queimada.municipios.map((municipio) => municipio.quantidade),
-        backgroundColor: queimada.municipios.map(
-          () =>
-            `rgba(${Math.random() * 255}, ${Math.random() * 255}, ${
-              Math.random() * 255
-            }, 0.6)`
+        data: intensityData,
+        backgroundColor: queimadas.map(
+          () => `rgba(${Math.random() * 255}, ${Math.random() * 255}, ${Math.random() * 255}, 0.6)`
         ),
       },
     ],
   };
 
   const options = {
+    responsive: true,
+    maintainAspectRatio: false,
     scales: {
-      y: {
+      y: { 
         beginAtZero: true,
+        title: {
+          display: true,
+          text: 'Nível de Intensidade',
+        },
+        ticks: {
+          callback: (value: any) => {
+            if (value === 1) return 'Baixo';
+            if (value === 2) return 'Médio';
+            if (value === 3) return 'Alto';
+            return '';
+          },
+        },
       },
     },
     plugins: {
       legend: {
-        display: true,
+        position: "top" as const,
       },
       title: {
         display: true,
-        text: `Estado: ${queimada.estado} | Intensidade Total: ${queimada.intensidade}`,
+        text: 'Intensidade das Queimadas por Estado',
       },
     },
   };
 
   return (
-    <Box
-      p={4}
-      borderWidth="1px"
-      borderRadius="lg"
-      boxShadow="lg"
-      bgGradient="linear(to-br, #f7fafc, #e2e8f0)"
-      textAlign="center"
-    >
+    <Box width="100%" height="400px" mb={4}>
       <Bar data={data} options={options} />
     </Box>
   );

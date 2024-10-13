@@ -7,7 +7,6 @@ import {
 } from "../../mock/QueimadasData";
 import GraficoBarras from "../Graficos/GraficoGeral";
 import GraficoMunicipios from "../Graficos/GraficoMunicipio";
-import GraficoEstadoQueimada from "../Graficos/GraficoEstadoQueimada";
 import GraficoDiasSemChuvas from "../Graficos/GraficoEstadoDiasSemChuvas";
 import GraficoIntensidade from "../Graficos/GraficoIntensidade";
 
@@ -48,10 +47,9 @@ const InformativoCard: React.FC = () => {
           onClick={() => {
             setChartType((prev) => {
               if (prev === "geral") return "diasSemChuvas";
-              if (prev === "diasSemChuvas") return "queimada";
-              if (prev === "queimada") return "Municipios";
-              if (prev === "Municipios") return "queimada";
-              if (prev === "queimada") return "geral";
+              if (prev === "diasSemChuvas") return "Municipios";
+              if (prev === "Municipios") return "Intensidade";
+              if (prev === "Intensidade") return "geral";
               return "geral";
             });
           }}
@@ -85,12 +83,6 @@ const InformativoCard: React.FC = () => {
             <GraficoDiasSemChuvas queimadas={filteredData} />
           )}
 
-          {chartType === "queimada" && (
-            <SimpleGrid columns={{ base: 1, md: 2 }} spacing={4}>
-              <GraficoEstadoQueimada queimada={filteredData} />
-            </SimpleGrid>
-          )}
-
           {chartType === "Municipios" && (
             <SimpleGrid columns={{ base: 1, md: 2 }} spacing={4}>
               {filteredData.map((queimada, index) => (
@@ -100,11 +92,7 @@ const InformativoCard: React.FC = () => {
           )}
 
           {chartType === "Intensidade" && (
-            <SimpleGrid columns={{ base: 1, md: 2 }} spacing={4}>
-              {filteredData.map((queimada, index) => (
-                <GraficoIntensidade key={index} queimada={queimada} />
-              ))}
-            </SimpleGrid>
+                <GraficoIntensidade  queimadas={filteredData} />
           )}
         </Box>
       )}

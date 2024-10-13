@@ -2,24 +2,32 @@ export interface MunicipioAfetado {
   nome: string;
   quantidade: number;
 }
+
 export interface Queimada {
   latitude: number;
   longitude: number;
   estado: string;
   diaSemChuva: number;
-  intensidade: number;
+  intensidade: string;
   periodo: string;
   quantidade: number;
   municipios: MunicipioAfetado[];
   coords: [number, number][];
 }
+
+const mapIntensity = (intensity: number): string => {
+  if (intensity < 40) return "baixo";
+  if (intensity < 70) return "médio";
+  return "alto";
+};
+
 export const QueimadasData: Queimada[] = [
   {
     latitude: -8.7759,
     longitude: -70.535,
     estado: "Acre",
     diaSemChuva: 12,
-    intensidade: 75,
+    intensidade: mapIntensity(75), // "alto"
     periodo: "2024",
     quantidade: 150,
     municipios: [
@@ -40,7 +48,7 @@ export const QueimadasData: Queimada[] = [
     longitude: -36.782,
     estado: "Alagoas",
     diaSemChuva: 5,
-    intensidade: 50,
+    intensidade: mapIntensity(50), // "médio"
     periodo: "2024",
     quantidade: 90,
     municipios: [
@@ -61,7 +69,7 @@ export const QueimadasData: Queimada[] = [
     longitude: -51.073,
     estado: "Amapá",
     diaSemChuva: 9,
-    intensidade: 60,
+    intensidade: mapIntensity(60), // "médio"
     periodo: "2024",
     quantidade: 80,
     municipios: [
@@ -82,7 +90,7 @@ export const QueimadasData: Queimada[] = [
     longitude: -65.856,
     estado: "Amazonas",
     diaSemChuva: 7,
-    intensidade: 80,
+    intensidade: mapIntensity(80), // "alto"
     periodo: "2024",
     quantidade: 200,
     municipios: [
@@ -103,7 +111,7 @@ export const QueimadasData: Queimada[] = [
     longitude: -38.5014,
     estado: "Bahia",
     diaSemChuva: 15,
-    intensidade: 70,
+    intensidade: mapIntensity(70), // "alto"
     periodo: "2024",
     quantidade: 160,
     municipios: [
@@ -124,7 +132,7 @@ export const QueimadasData: Queimada[] = [
     longitude: -38.5433,
     estado: "Ceará",
     diaSemChuva: 8,
-    intensidade: 65,
+    intensidade: mapIntensity(65), // "médio"
     periodo: "2024",
     quantidade: 120,
     municipios: [
@@ -145,7 +153,7 @@ export const QueimadasData: Queimada[] = [
     longitude: -47.9292,
     estado: "Distrito Federal",
     diaSemChuva: 10,
-    intensidade: 55,
+    intensidade: mapIntensity(55), // "médio"
     periodo: "2024",
     quantidade: 40,
     municipios: [
@@ -166,7 +174,7 @@ export const QueimadasData: Queimada[] = [
     longitude: -40.3128,
     estado: "Espírito Santo",
     diaSemChuva: 3,
-    intensidade: 50,
+    intensidade: mapIntensity(50), // "médio"
     periodo: "2024",
     quantidade: 30,
     municipios: [
@@ -187,7 +195,7 @@ export const QueimadasData: Queimada[] = [
     longitude: -49.2643,
     estado: "Goiás",
     diaSemChuva: 4,
-    intensidade: 30,
+    intensidade: mapIntensity(30), // "baixo"
     periodo: "2024",
     quantidade: 70,
     municipios: [
@@ -208,7 +216,7 @@ export const QueimadasData: Queimada[] = [
     longitude: -44.2982,
     estado: "Maranhão",
     diaSemChuva: 5,
-    intensidade: 40,
+    intensidade: mapIntensity(40), // "médio"
     periodo: "2024",
     quantidade: 100,
     municipios: [
@@ -229,28 +237,28 @@ export const QueimadasData: Queimada[] = [
     longitude: -55.0402,
     estado: "Mato Grosso",
     diaSemChuva: 6,
-    intensidade: 65,
+    intensidade: mapIntensity(65), // "médio"
     periodo: "2024",
-    quantidade: 150,
+    quantidade: 110,
     municipios: [
-      { nome: "Cuiabá", quantidade: 60 },
+      { nome: "Cuiabá", quantidade: 50 },
       { nome: "Várzea Grande", quantidade: 30 },
-      { nome: "Rondonópolis", quantidade: 25 },
-      { nome: "Sinop", quantidade: 20 },
-      { nome: "Tangará da Serra", quantidade: 15 },
+      { nome: "Rondonópolis", quantidade: 15 },
+      { nome: "Sinop", quantidade: 10 },
+      { nome: "Tangará da Serra", quantidade: 5 },
     ],
     coords: [
       [-12.2508, -55.0402],
-      [-12.5, -55.5],
-      [-12.0, -54.8],
+      [-12.0, -55.5],
+      [-12.5, -54.5],
     ],
   },
   {
-    latitude: -20.5072,
-    longitude: -54.5852,
+    latitude: -14.2350,
+    longitude: -56.4694,
     estado: "Mato Grosso do Sul",
-    diaSemChuva: 8,
-    intensidade: 55,
+    diaSemChuva: 7,
+    intensidade: mapIntensity(70), // "alto"
     periodo: "2024",
     quantidade: 140,
     municipios: [
@@ -261,135 +269,73 @@ export const QueimadasData: Queimada[] = [
       { nome: "Ponta Porã", quantidade: 10 },
     ],
     coords: [
-      [-20.5072, -54.5852],
-      [-20.5, -54.7],
-      [-20.3, -54.3],
+      [-14.2350, -56.4694],
+      [-14.0, -56.5],
+      [-14.5, -56.0],
     ],
   },
   {
-    latitude: -8.0536,
-    longitude: -34.8772,
-    estado: "Pernambuco",
-    diaSemChuva: 7,
-    intensidade: 50,
+    latitude: -16.9926,
+    longitude: -49.1021,
+    estado: "Minas Gerais",
+    diaSemChuva: 10,
+    intensidade: mapIntensity(75), // "alto"
     periodo: "2024",
-    quantidade: 80,
+    quantidade: 200,
     municipios: [
-      { nome: "Recife", quantidade: 40 },
-      { nome: "Jaboatão dos Guararapes", quantidade: 20 },
-      { nome: "Olinda", quantidade: 10 },
-      { nome: "Caruaru", quantidade: 5 },
-      { nome: "Petrolina", quantidade: 5 },
+      { nome: "Belo Horizonte", quantidade: 80 },
+      { nome: "Uberlândia", quantidade: 50 },
+      { nome: "Contagem", quantidade: 30 },
+      { nome: "Juiz de Fora", quantidade: 20 },
+      { nome: "Governador Valadares", quantidade: 10 },
     ],
     coords: [
-      [-8.0536, -34.8772],
-      [-8.1, -34.8],
-      [-8.0, -34.5],
+      [-16.9926, -49.1021],
+      [-16.5, -49.0],
+      [-17.0, -49.5],
     ],
   },
   {
-    latitude: -4.8135,
-    longitude: -43.1726,
-    estado: "Piauí",
-    diaSemChuva: 9,
-    intensidade: 45,
+    latitude: -20.3155,
+    longitude: -40.3128,
+    estado: "Espírito Santo",
+    diaSemChuva: 3,
+    intensidade: mapIntensity(50), // "médio"
+    periodo: "2024",
+    quantidade: 30,
+    municipios: [
+      { nome: "Vitória", quantidade: 10 },
+      { nome: "Vila Velha", quantidade: 10 },
+      { nome: "Serra", quantidade: 5 },
+      { nome: "Cariacica", quantidade: 3 },
+      { nome: "Colatina", quantidade: 2 },
+    ],
+    coords: [
+      [-20.3155, -40.3128],
+      [-20.0, -40.5],
+      [-20.5, -40.0],
+    ],
+  },
+  {
+    latitude: -3.5952,
+    longitude: -38.7437,
+    estado: "Ceará",
+    diaSemChuva: 12,
+    intensidade: mapIntensity(55), // "médio"
     periodo: "2024",
     quantidade: 90,
     municipios: [
-      { nome: "Teresina", quantidade: 40 },
-      { nome: "Parnaíba", quantidade: 20 },
-      { nome: "Picos", quantidade: 15 },
-      { nome: "Floriano", quantidade: 10 },
-      { nome: "Oeiras", quantidade: 5 },
+      { nome: "Fortaleza", quantidade: 40 },
+      { nome: "Caucaia", quantidade: 25 },
+      { nome: "Maracanaú", quantidade: 15 },
+      { nome: "Sobral", quantidade: 5 },
+      { nome: "Crato", quantidade: 5 },
     ],
     coords: [
-      [-4.8135, -43.1726],
-      [-4.5, -43.0],
-      [-5.0, -43.5],
-    ],
-  },
-  {
-    latitude: -22.9068,
-    longitude: -43.1729,
-    estado: "Rio de Janeiro",
-    diaSemChuva: 4,
-    intensidade: 70,
-    periodo: "2024",
-    quantidade: 110,
-    municipios: [
-      { nome: "Rio de Janeiro", quantidade: 60 },
-      { nome: "Niterói", quantidade: 20 },
-      { nome: "Nova Iguaçu", quantidade: 15 },
-      { nome: "Duque de Caxias", quantidade: 10 },
-      { nome: "São Gonçalo", quantidade: 5 },
-    ],
-    coords: [
-      [-22.9068, -43.1729],
-      [-22.5, -43.5],
-      [-23.0, -43.2],
-    ],
-  },
-  {
-    latitude: -7.115,
-    longitude: -34.861,
-    estado: "Rio Grande do Norte",
-    diaSemChuva: 6,
-    intensidade: 40,
-    periodo: "2024",
-    quantidade: 70,
-    municipios: [
-      { nome: "Natal", quantidade: 35 },
-      { nome: "Mossoró", quantidade: 15 },
-      { nome: "Parnamirim", quantidade: 10 },
-      { nome: "Caicó", quantidade: 5 },
-      { nome: "Currais Novos", quantidade: 5 },
-    ],
-    coords: [
-      [-7.115, -34.861],
-      [-7.0, -35.0],
-      [-7.2, -34.5],
-    ],
-  },
-  {
-    latitude: -30.0346,
-    longitude: -51.2177,
-    estado: "Rio Grande do Sul",
-    diaSemChuva: 5,
-    intensidade: 30,
-    periodo: "2024",
-    quantidade: 60,
-    municipios: [
-      { nome: "Porto Alegre", quantidade: 30 },
-      { nome: "Caxias do Sul", quantidade: 10 },
-      { nome: "Pelotas", quantidade: 8 },
-      { nome: "Santa Maria", quantidade: 7 },
-      { nome: "Gravataí", quantidade: 5 },
-    ],
-    coords: [
-      [-30.0346, -51.2177],
-      [-30.1, -51.0],
-      [-30.3, -51.5],
-    ],
-  },
-  {
-    latitude: -10.3335,
-    longitude: -48.3043,
-    estado: "Tocantins",
-    diaSemChuva: 7,
-    intensidade: 50,
-    periodo: "2024",
-    quantidade: 70,
-    municipios: [
-      { nome: "Palmas", quantidade: 30 },
-      { nome: "Araguaína", quantidade: 15 },
-      { nome: "Gurupi", quantidade: 10 },
-      { nome: "Porto Nacional", quantidade: 5 },
-      { nome: "Miracema do Tocantins", quantidade: 5 },
-    ],
-    coords: [
-      [-10.3335, -48.3043],
-      [-10.5, -48.5],
-      [-10.1, -48.2],
+      [-3.5952, -38.7437],
+      [-3.5, -39.0],
+      [-3.7, -38.8],
     ],
   },
 ];
+
