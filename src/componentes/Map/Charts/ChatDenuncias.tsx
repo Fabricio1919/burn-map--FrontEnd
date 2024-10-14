@@ -32,6 +32,13 @@ const ChatDenuncias: React.FC = () => {
   const enviarMensagem = (autor: string, texto: string) => {
     mensagensRef.current.push({ autor, texto });
     forceUpdate();
+
+    setTimeout(() => {
+      const lastMessage = document.querySelector(".last-message");
+      if (lastMessage) {
+        lastMessage.scrollIntoView({ behavior: "smooth" });
+      }
+    }, 0);
   };
 
   const handleResposta = () => {
@@ -103,6 +110,11 @@ const ChatDenuncias: React.FC = () => {
                     bg={msg.autor === "Fabricio" ? "blue.200" : "green.100"}
                     p={1}
                     borderRadius="md"
+                    className={
+                      index === mensagensRef.current.length - 1
+                        ? "last-message"
+                        : ""
+                    }
                   >
                     <Flex alignItems="center">
                       <Text fontWeight="bold" mr={2}>
