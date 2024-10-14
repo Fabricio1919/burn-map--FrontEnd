@@ -11,7 +11,7 @@
   },
   "dependencies": {
     "@chakra-ui/icons": "^2.2.4",
-    "@chakra-ui/react": "^2.10.1",
+    "@chakra-ui/react": "^2.10.2",
     "@emotion/react": "^11.13.3",
     "@emotion/styled": "^11.13.0",
     "@mui/icons-material": "^6.1.2",
@@ -19,8 +19,9 @@
     "@react-google-maps/api": "^2.20.2",
     "axios": "^1.7.7",
     "chart.js": "^4.4.4",
+    "dialogflow": "^4.0.3",
     "firebase": "^10.14.1",
-    "framer-motion": "^11.11.4",
+    "framer-motion": "^11.11.8",
     "leaflet": "^1.9.4",
     "react": "^18.3.1",
     "react-chartjs-2": "^5.2.0",
@@ -30,7 +31,8 @@
     "react-router-dom": "^6.26.2",
     "react-slick": "^0.30.2",
     "recharts": "^2.12.7",
-    "slick-carousel": "^1.8.1"
+    "slick-carousel": "^1.8.1",
+    "uuid": "^10.0.0"
   },
   "devDependencies": {
     "@eslint/js": "^9.11.1",
@@ -39,6 +41,7 @@
     "@types/react": "^18.3.10",
     "@types/react-dom": "^18.3.0",
     "@types/react-slick": "^0.23.13",
+    "@types/uuid": "^10.0.0",
     "@vitejs/plugin-react": "^4.3.2",
     "eslint": "^9.11.1",
     "eslint-plugin-react-hooks": "^5.1.0-rc.0",
