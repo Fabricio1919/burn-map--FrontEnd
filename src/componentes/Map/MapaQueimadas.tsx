@@ -40,7 +40,7 @@ const MapaQueimadas: React.FC<MapaQueimadasProps> = ({ queimadas }) => {
   }
 
   return (
-    <Box height="92%" width="100%" position="relative">
+    <Box height="100%" width="100%" position="relative">
       <MapContainer
         center={[-3.4653, -62.2159]}
         zoom={6}
