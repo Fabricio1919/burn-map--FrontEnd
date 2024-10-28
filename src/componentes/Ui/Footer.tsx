@@ -9,10 +9,8 @@ const Footer: React.FC = () => {
       bg="blue.500"
       color="white"
       py={4}
-      position="fixed"
+      position="sticky"
       bottom={0}
-      left={0}
-      right={0}
     >
       <Flex align="center" justify="space-between" mx="auto" px={4}>
         <Text>
