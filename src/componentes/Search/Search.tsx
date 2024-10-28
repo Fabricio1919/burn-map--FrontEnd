@@ -30,7 +30,7 @@ const SearchInput = ({ onSearch }: SearchInputProps) => {
   };
 
   return (
-    <Box width="100%" p={4} borderRadius="md">
+    <Box width="100%" p={2} mt={3} borderRadius="md">
       <Input
         placeholder="Search..."
         value={searchParam.text}

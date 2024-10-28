@@ -38,8 +38,15 @@ const InformativoCard: React.FC = () => {
   }, []);
 
   return (
-    <Box py={4} position="relative">
-      <Flex mb={4} alignItems="center">
+    <Box position="relative">
+      <Flex
+        alignItems="center"
+        position="sticky"
+        top="0"
+        zIndex="10"
+        bg="white"
+        p="2"
+      >
         <SearchInput onSearch={setSearchTerm} />
         <Button
           ml={4}
@@ -92,7 +99,7 @@ const InformativoCard: React.FC = () => {
           )}
 
           {chartType === "Intensidade" && (
-                <GraficoIntensidade  queimadas={filteredData} />
+            <GraficoIntensidade queimadas={filteredData} />
           )}
         </Box>
       )}

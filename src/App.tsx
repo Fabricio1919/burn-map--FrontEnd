@@ -42,10 +42,10 @@ const App = () => {
     <Router>
       <Card id="root">
         <Tabs variant="soft-rounded" colorScheme="teal">
-          <Flex direction="column" height="100vh" gap="0.1rem">
+          <Flex direction="column" height="100vh">
             <Navbar />
             <SideBar />
-            <Box flex="1">
+            <Box flex="1" overflowY="auto" mt="55px">
               <Routes>
                 <Route
                   path="/"

@@ -9,8 +9,11 @@ const Navbar: React.FC = () => {
       color="white"
       align="center"
       justify="center"
-      position="relative"
+      position="fixed" // Altera para "fixed"
+      top={0} // Define a posição no topo
+      width="100%" // Garante que o Navbar ocupe toda a largura
       boxShadow="md"
+      zIndex={1000} // Define um zIndex alto para que o Navbar fique acima dos outros elementos
     >
       <Text fontSize="xl" fontWeight="bold">
         Painel do Fogo
