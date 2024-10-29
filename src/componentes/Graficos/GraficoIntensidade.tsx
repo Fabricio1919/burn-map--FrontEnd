@@ -6,31 +6,41 @@ import QueimadasService from "../../api/QueimadasService";
 import { Queimada } from "../../api/types"; 
 
 const GraficoIntensidade: React.FC = () => {
-  const [queimadas, setQueimadas] = useState<Queimada[]>([]);
+  const [queimadasPorLote, setQueimadasPorLote] = useState<Queimada[][]>([]);
 
   useEffect(() => {
     const fetchData = async () => {
-      const data = await QueimadasService.getAll();
-      setQueimadas(data);
+      try {
+        const data = await QueimadasService.getAll();
+        const dataOrdenada = data.sort((a, b) => b.precipita - a.precipita);
+        const lotes = [];
+        for (let i = 0; i < dataOrdenada.length; i += 25) {
+          lotes.push(dataOrdenada.slice(i, i + 25));
+        }
+        setQueimadasPorLote(lotes);
+      } catch (error) {
+        console.error("Erro ao buscar dados das queimadas:", error);
+      }
     };
-
     fetchData();
   }, []);
 
-  const labels = queimadas.map((q) => q.municipio);
-  const precipitaData = queimadas.map((q) => q.precipita);
-
-  const data = {
-    labels,
-    datasets: [
-      {
-        label: "Precipitação (mm)",
-        data: precipitaData,
-        backgroundColor: queimadas.map(
-          () => `rgba(${Math.random() * 255}, ${Math.random() * 255}, ${Math.random() * 255}, 0.6)`
-        ),
-      },
-    ],
+  const prepararDadosGrafico = (lote: Queimada[]) => {
+    return {
+      labels: lote.map((q) => q.municipio),
+      datasets: [
+        {
+          label: "Precipitação (mm)",
+          data: lote.map((q) => q.precipita), 
+          backgroundColor: lote.map(
+            () =>
+              `rgba(${Math.random() * 255}, ${Math.random() * 255}, ${
+                Math.random() * 255
+              }, 0.6)`
+          ),
+        },
+      ],
+    };
   };
 
   const options = {
@@ -57,8 +67,12 @@ const GraficoIntensidade: React.FC = () => {
   };
 
   return (
-    <Box width="100%" height="400px" mb={4}>
-      <Bar data={data} options={options} />
+    <Box>
+      {queimadasPorLote.map((lote, index) => (
+        <Box key={index} className="chart-box" width="100%" height="400px" mb={4}>
+          <Bar data={prepararDadosGrafico(lote)} options={options} />
+        </Box>
+      ))}
     </Box>
   );
 };
