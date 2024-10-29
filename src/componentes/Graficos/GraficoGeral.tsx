@@ -1,36 +1,46 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { Bar } from "react-chartjs-2";
-import { Box, Skeleton } from "@chakra-ui/react";
+import { Box } from "@chakra-ui/react";
 import "chart.js/auto";
+import QueimadasService from "../../api/QueimadasService";
+import { Queimada } from "../../api/types";
 
-interface Queimada {
-  estado: string;
-  quantidade: number;
-}
+const GraficoGeral: React.FC = () => {
+  const [queimadasPorLote, setQueimadasPorLote] = useState<Queimada[][]>([]);
 
-interface GraficoGeralProps {
-  queimadas: Queimada[];
-  isLoading: boolean;
-}
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const data = await QueimadasService.getAll();
+        const dataOrdenada = data.sort((a, b) => b.frp - a.frp);
+        const lotes = [];
+        for (let i = 0; i < dataOrdenada.length; i += 25) {
+          lotes.push(dataOrdenada.slice(i, i + 25));
+        }
+        setQueimadasPorLote(lotes);
+      } catch (error) {
+        console.error("Erro ao buscar dados das queimadas:", error);
+      }
+    };
+    fetchData();
+  }, []);
 
-const GraficoGeral: React.FC<GraficoGeralProps> = ({
-  queimadas,
-  isLoading,
-}) => {
-  const data = {
-    labels: queimadas.map((q) => q.estado),
-    datasets: [
-      {
-        label: "Número de Queimadas",
-        data: queimadas.map((q) => q.quantidade),
-        backgroundColor: queimadas.map(
-          () =>
-            `rgba(${Math.random() * 255}, ${Math.random() * 255}, ${
-              Math.random() * 255
-            }, 0.6)`
-        ),
-      },
-    ],
+  const prepararDadosGrafico = (lote: Queimada[]) => {
+    return {
+      labels: lote.map((q) => q.municipio),
+      datasets: [
+        {
+          label: "Número de Queimadas",
+          data: lote.map((q) => q.frp), 
+          backgroundColor: lote.map(
+            () =>
+              `rgba(${Math.random() * 255}, ${Math.random() * 255}, ${
+                Math.random() * 255
+              }, 0.6)`
+          ),
+        },
+      ],
+    };
   };
 
   const options = {
@@ -45,18 +55,18 @@ const GraficoGeral: React.FC<GraficoGeralProps> = ({
       },
       title: {
         display: true,
-        text: "Número de Queimadas por Estado",
+        text: "Número de Queimadas por Municipio",
       },
     },
   };
 
   return (
-    <Box className="chart-box" width="100%" height="400px" mb={4}>
-      {isLoading ? (
-        <Skeleton height="400px" />
-      ) : (
-        <Bar data={data} options={options} />
-      )}
+    <Box>
+      {queimadasPorLote.map((lote, index) => (
+        <Box key={index} className="chart-box" width="100%" height="400px" mb={4}>
+          <Bar data={prepararDadosGrafico(lote)} options={options} />
+        </Box>
+      ))}
     </Box>
   );
 };

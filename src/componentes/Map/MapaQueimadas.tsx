@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Box, Button, Text } from "@chakra-ui/react";
 import { MapContainer, TileLayer, Polygon, Popup } from "react-leaflet";
 import "leaflet/dist/leaflet.css";
@@ -12,19 +12,23 @@ import {
   ModalFooter,
   useDisclosure,
 } from "@chakra-ui/react";
-
-import { Queimada } from "../../mock/QueimadasData";
+import { Queimada } from "../../api/types";
+import QueimadasService from "../../api/QueimadasService"; 
 import GraficoMunicipios from "../Graficos/GraficoMunicipio";
 import ChatDenuncias from "./Charts/ChatDenuncias";
 
-interface MapaQueimadasProps {
-  queimadas: Queimada[];
-}
-
-const MapaQueimadas: React.FC<MapaQueimadasProps> = ({ queimadas }) => {
-  const [queimadaSelecionada, setQueimadaSelecionada] =
-    useState<Queimada | null>(null);
+const MapaQueimadas: React.FC = () => {
+  const [queimadas, setQueimadas] = useState<Queimada[]>([]);
+  const [queimadaSelecionada, setQueimadaSelecionada] = useState<Queimada | null>(null);
   const { isOpen, onOpen, onClose } = useDisclosure();
+
+  useEffect(() => {
+    const fetchQueimadas = async () => {
+      const data = await QueimadasService.getAll();
+      setQueimadas(data);
+    };
+    fetchQueimadas();
+  }, []);
 
   if (!queimadas || queimadas.length === 0) {
     return (
@@ -50,7 +54,7 @@ const MapaQueimadas: React.FC<MapaQueimadasProps> = ({ queimadas }) => {
         {queimadas.map((queimada, index) => (
           <Polygon
             key={index}
-            positions={queimada.coords}
+            positions={[[queimada.latitude, queimada.longitude]]} 
             pathOptions={{
               fillColor: "red",
               color: "red",
@@ -71,17 +75,10 @@ const MapaQueimadas: React.FC<MapaQueimadasProps> = ({ queimadas }) => {
                   <strong>Estado:</strong> {queimada.estado}
                 </Text>
                 <Text fontWeight="bold">
-                  <strong>Dias sem chuva:</strong> {queimada.diaSemChuva}
+                  <strong>Dias sem chuva:</strong> {queimada.dias_sem_chuva}
                 </Text>
                 <Text fontWeight="bold">
-                  <strong>Intensidade:</strong> {queimada.intensidade}
-                </Text>
-                <Text fontWeight="bold">
-                  <strong>Quantidade de queimadas:</strong>{" "}
-                  {queimada.quantidade}
-                </Text>
-                <Text fontWeight="bold">
-                  <strong>Período:</strong> {queimada.periodo}
+                  <strong>Intensidade:</strong> {queimada.frp} 
                 </Text>
                 <Button
                   colorScheme="blue"
@@ -106,7 +103,7 @@ const MapaQueimadas: React.FC<MapaQueimadasProps> = ({ queimadas }) => {
             <ModalHeader>Gráfico de Municípios</ModalHeader>
             <ModalCloseButton />
             <ModalBody>
-              <GraficoMunicipios queimada={queimadaSelecionada} />
+              <GraficoMunicipios />
             </ModalBody>
             <ModalFooter>
               <Button colorScheme="red" onClick={onClose}>

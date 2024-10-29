@@ -2,7 +2,6 @@ import { Box, Card, Flex, Tabs } from "@chakra-ui/react";
 import { useState, useEffect } from "react";
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import Navbar from "./componentes/Ui/NavBar";
-import { QueimadasData } from "./mock/QueimadasData";
 import SideBar from "./componentes/Ui/SideBar";
 import Footer from "./componentes/Ui/Footer";
 import MapaQueimadas from "./componentes/Map/MapaQueimadas";
@@ -14,7 +13,7 @@ import { SplashScreen } from "./componentes/SplashScren/SplashScren";
 
 const App = () => {
   const [showSplash, setShowSplash] = useState(true);
-  const [isLoading, setIsLoading] = useState(true);
+  const [, setIsLoading] = useState(true);
 
   const startTimer = () => {
     setTimeout(() => {
@@ -49,7 +48,7 @@ const App = () => {
               <Routes>
                 <Route
                   path="/"
-                  element={<MapaQueimadas queimadas={QueimadasData} />}
+                  element={<MapaQueimadas  />}
                 />
                 <Route path="/InformativoCard" element={<InformativoCard />} />
                 <Route path="/causas" element={<Causas />} />
@@ -57,9 +56,7 @@ const App = () => {
                 <Route
                   path="/graficos"
                   element={
-                    <GraficoBarras
-                      queimadas={QueimadasData}
-                      isLoading={isLoading}
+                    <GraficoBarras                    
                     />
                   }
                 />

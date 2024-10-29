@@ -1,36 +1,31 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import "chart.js/auto";
 import { Bar } from "react-chartjs-2";
 import { Box } from "@chakra-ui/react";
-import { Queimada } from "../../mock/QueimadasData";
+import QueimadasService from "../../api/QueimadasService"; 
+import { Queimada } from "../../api/types"; 
 
-interface GraficoIntensidadeProps {
-  queimadas: Queimada[];
-}
+const GraficoIntensidade: React.FC = () => {
+  const [queimadas, setQueimadas] = useState<Queimada[]>([]);
 
-const GraficoIntensidade: React.FC<GraficoIntensidadeProps> = ({
-  queimadas,
-}) => {
-  const labels = queimadas.map((q) => q.estado);
-  const intensityData = queimadas.map((q) => {
-    switch (q.intensidade) {
-      case "baixo":
-        return 1; 
-      case "médio":
-        return 2; 
-      case "alto":
-        return 3; 
-      default:
-        return 0; 
-    }
-  });
+  useEffect(() => {
+    const fetchData = async () => {
+      const data = await QueimadasService.getAll();
+      setQueimadas(data);
+    };
+
+    fetchData();
+  }, []);
+
+  const labels = queimadas.map((q) => q.municipio);
+  const precipitaData = queimadas.map((q) => q.precipita);
 
   const data = {
     labels,
     datasets: [
       {
-        label: "Intensidade das Queimadas",
-        data: intensityData,
+        label: "Precipitação (mm)",
+        data: precipitaData,
         backgroundColor: queimadas.map(
           () => `rgba(${Math.random() * 255}, ${Math.random() * 255}, ${Math.random() * 255}, 0.6)`
         ),
@@ -46,15 +41,7 @@ const GraficoIntensidade: React.FC<GraficoIntensidadeProps> = ({
         beginAtZero: true,
         title: {
           display: true,
-          text: 'Nível de Intensidade',
-        },
-        ticks: {
-          callback: (value: any) => {
-            if (value === 1) return 'Baixo';
-            if (value === 2) return 'Médio';
-            if (value === 3) return 'Alto';
-            return '';
-          },
+          text: 'Precipitação (mm)',
         },
       },
     },
@@ -64,7 +51,7 @@ const GraficoIntensidade: React.FC<GraficoIntensidadeProps> = ({
       },
       title: {
         display: true,
-        text: 'Intensidade das Queimadas por Estado',
+        text: 'Precipitação das Queimadas por Municipio',
       },
     },
   };

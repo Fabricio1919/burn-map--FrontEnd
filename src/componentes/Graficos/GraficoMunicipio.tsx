@@ -1,34 +1,63 @@
-import React from "react";
-import { Box, Text } from "@chakra-ui/react";
+import React, { useEffect, useState } from "react";
+import { Box, SimpleGrid } from "@chakra-ui/react"; 
 import { Pie } from "react-chartjs-2";
-import { Queimada } from "../../mock/QueimadasData";
+import QueimadasService from "../../api/QueimadasService"; 
+import { Queimada } from "../../api/types"; 
 
-interface GraficoEstadoProps {
-  queimada: Queimada;
-}
+const GraficoMunicipios: React.FC = () => {
+  const [queimadasPorLote, setQueimadasPorLote] = useState<Queimada[][]>([]);
 
-const GraficoMunicipios: React.FC<GraficoEstadoProps> = ({ queimada }) => {
-  const data =  {
- 
-      labels: queimada.municipios.map((municipio) => municipio.nome),
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const data = await QueimadasService.getAll();
+        const dataOrdenada = data.sort((a, b) => b.frp - a.frp);
+        const lotes = [];
+        for (let i = 0; i < dataOrdenada.length; i += 10) {
+          lotes.push(dataOrdenada.slice(i, i + 10));
+        }
+        setQueimadasPorLote(lotes);
+      } catch (error) {
+        console.error("Erro ao buscar dados das queimadas:", error);
+      }
+    };
+    fetchData();
+  }, []);
+
+  const prepararDadosGrafico = (lote: Queimada[]) => {
+    return {
+      labels: lote.map((q) => q.municipio),
       datasets: [
         {
-          data: queimada.municipios.map((municipio) => municipio.quantidade),
-          backgroundColor: [
-            "#FF6384",
-            "#36A2EB",
-            "#FFCE56",
-            "#4BC0C0",
-            "#9966FF",
-            "#FF9F40",
-          ],
+          label: "Número de Queimadas",
+          data: lote.map((q) => q.frp), 
+          backgroundColor: lote.map(
+            () =>
+              `rgba(${Math.random() * 255}, ${Math.random() * 255}, ${
+                Math.random() * 255
+              }, 0.6)`
+          ),
         },
       ],
-    
+    };
   };
 
-
-
+  const options = {
+    responsive: true,
+    maintainAspectRatio: false,
+    scales: {
+      y: { beginAtZero: true },
+    },
+    plugins: {
+      legend: {
+        position: "top" as const,
+      },
+      title: {
+        display: true,
+        text: "Número de Queimadas por Município",
+      },
+    },
+  };
 
   return (
     <Box
@@ -36,18 +65,22 @@ const GraficoMunicipios: React.FC<GraficoEstadoProps> = ({ queimada }) => {
       borderWidth="1px"
       borderRadius="lg"
       boxShadow="lg"
-      bgGradient="linear(to-br, #f7fafc, #e2e8f0)"
       textAlign="center"
     >
-      <Text fontWeight="bold" >
-      Queimadas por Estado / Municipio
-      </Text>
-      <Text fontWeight="bold" fontSize="lg" color="teal.600">
-        {queimada.estado}
-      </Text>
-      <Box height="300px" width="300px" mx="auto">
-        <Pie data={data}  />
-      </Box>
+      <SimpleGrid columns={[1, 2]} spacing={6} width="100%"> 
+        {queimadasPorLote.map((lote, index) => (
+          <Box
+            key={index}
+            className="chart-box"
+            width="100%"
+            height="400px"
+            boxShadow="md" 
+            p={4} 
+          >
+            <Pie data={prepararDadosGrafico(lote)} options={options} />
+          </Box>
+        ))}
+      </SimpleGrid>
     </Box>
   );
 };

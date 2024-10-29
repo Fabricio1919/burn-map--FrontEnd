@@ -83,23 +83,18 @@ const InformativoCard: React.FC = () => {
       ) : (
         <Box>
           {chartType === "geral" && (
-            <GraficoBarras queimadas={filteredData} isLoading={isLoading} />
+            <GraficoBarras  />
           )}
 
           {chartType === "diasSemChuvas" && (
-            <GraficoDiasSemChuvas queimadas={filteredData} />
+            <GraficoDiasSemChuvas  />
           )}
 
           {chartType === "Municipios" && (
-            <SimpleGrid columns={{ base: 1, md: 2 }} spacing={4}>
-              {filteredData.map((queimada, index) => (
-                <GraficoMunicipios key={index} queimada={queimada} />
-              ))}
-            </SimpleGrid>
+                <GraficoMunicipios  />
           )}
-
           {chartType === "Intensidade" && (
-            <GraficoIntensidade queimadas={filteredData} />
+            <GraficoIntensidade />
           )}
         </Box>
       )}
