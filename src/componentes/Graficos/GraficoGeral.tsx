@@ -3,36 +3,51 @@ import { Bar } from "react-chartjs-2";
 import { Box } from "@chakra-ui/react";
 import "chart.js/auto";
 import QueimadasService from "../../api/QueimadasService";
-import { Queimada } from "../../api/types";
 
 const GraficoGeral: React.FC = () => {
-  const [queimadasPorLote, setQueimadasPorLote] = useState<Queimada[][]>([]);
+  const [queimadasPorEstado, setQueimadasPorEstado] = useState<
+    Map<string, number>
+  >(new Map());
 
   useEffect(() => {
     const fetchData = async () => {
       try {
         const data = await QueimadasService.getAll();
-        const dataOrdenada = data.sort((a, b) => b.frp - a.frp);
-        const lotes = [];
-        for (let i = 0; i < dataOrdenada.length; i += 25) {
-          lotes.push(dataOrdenada.slice(i, i + 25));
-        }
-        setQueimadasPorLote(lotes);
+
+        // Agrupar queimadas por estado
+        const agrupamentoPorEstado = new Map<string, number>();
+        data.forEach((q) => {
+          const estado = q.Estado;
+          if (agrupamentoPorEstado.has(estado)) {
+            agrupamentoPorEstado.set(
+              estado,
+              agrupamentoPorEstado.get(estado)! + 1
+            );
+          } else {
+            agrupamentoPorEstado.set(estado, 1);
+          }
+        });
+
+        setQueimadasPorEstado(agrupamentoPorEstado);
       } catch (error) {
         console.error("Erro ao buscar dados das queimadas:", error);
       }
     };
+
     fetchData();
   }, []);
 
-  const prepararDadosGrafico = (lote: Queimada[]) => {
+  const prepararDadosGrafico = () => {
+    const estados = Array.from(queimadasPorEstado.keys());
+    const incidencias = Array.from(queimadasPorEstado.values());
+
     return {
-      labels: lote.map((q) => q.municipio),
+      labels: estados,
       datasets: [
         {
-          label: "Número de Queimadas",
-          data: lote.map((q) => q.frp), 
-          backgroundColor: lote.map(
+          label: "Número de Queimadas por Estado",
+          data: incidencias,
+          backgroundColor: estados.map(
             () =>
               `rgba(${Math.random() * 255}, ${Math.random() * 255}, ${
                 Math.random() * 255
@@ -55,18 +70,16 @@ const GraficoGeral: React.FC = () => {
       },
       title: {
         display: true,
-        text: "Número de Queimadas por Municipio",
+        text: "Número de Queimadas por Estado",
       },
     },
   };
 
   return (
     <Box>
-      {queimadasPorLote.map((lote, index) => (
-        <Box key={index} className="chart-box" width="100%" height="400px" mb={4}>
-          <Bar data={prepararDadosGrafico(lote)} options={options} />
-        </Box>
-      ))}
+      <Box className="chart-box" width="100%" height="400px" mb={4}>
+        <Bar data={prepararDadosGrafico()} options={options} />
+      </Box>
     </Box>
   );
 };

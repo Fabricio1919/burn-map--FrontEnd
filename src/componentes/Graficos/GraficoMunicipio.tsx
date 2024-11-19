@@ -1,22 +1,33 @@
 import React, { useEffect, useState } from "react";
-import { Box, SimpleGrid } from "@chakra-ui/react"; 
+import { Box, SimpleGrid } from "@chakra-ui/react";
 import { Pie } from "react-chartjs-2";
-import QueimadasService from "../../api/QueimadasService"; 
-import { Queimada } from "../../api/types"; 
+import QueimadasService from "../../api/QueimadasService";
+import { AMQ } from "../../api/types";
 
 const GraficoMunicipios: React.FC = () => {
-  const [queimadasPorLote, setQueimadasPorLote] = useState<Queimada[][]>([]);
+  const [dadosPorEstado, setDadosPorEstado] = useState<{
+    [estado: string]: AMQ[];
+  }>({});
 
   useEffect(() => {
     const fetchData = async () => {
       try {
         const data = await QueimadasService.getAll();
-        const dataOrdenada = data.sort((a, b) => b.frp - a.frp);
-        const lotes = [];
-        for (let i = 0; i < dataOrdenada.length; i += 10) {
-          lotes.push(dataOrdenada.slice(i, i + 10));
-        }
-        setQueimadasPorLote(lotes);
+
+        // Agrupar os dados por estado
+        const dadosAgrupadosPorEstado = data.reduce(
+          (acc: { [estado: string]: AMQ[] }, curr: AMQ) => {
+            const estado = curr.Estado;
+            if (!acc[estado]) {
+              acc[estado] = [];
+            }
+            acc[estado].push(curr);
+            return acc;
+          },
+          {}
+        );
+
+        setDadosPorEstado(dadosAgrupadosPorEstado);
       } catch (error) {
         console.error("Erro ao buscar dados das queimadas:", error);
       }
@@ -24,14 +35,14 @@ const GraficoMunicipios: React.FC = () => {
     fetchData();
   }, []);
 
-  const prepararDadosGrafico = (lote: Queimada[]) => {
+  const prepararDadosGrafico = (municipios: AMQ[]) => {
     return {
-      labels: lote.map((q) => q.municipio),
+      labels: municipios.map((q) => q.Municipio),
       datasets: [
         {
           label: "Número de Queimadas",
-          data: lote.map((q) => q.frp), 
-          backgroundColor: lote.map(
+          data: municipios.map((q) => q.FRP),
+          backgroundColor: municipios.map(
             () =>
               `rgba(${Math.random() * 255}, ${Math.random() * 255}, ${
                 Math.random() * 255
@@ -45,9 +56,6 @@ const GraficoMunicipios: React.FC = () => {
   const options = {
     responsive: true,
     maintainAspectRatio: false,
-    scales: {
-      y: { beginAtZero: true },
-    },
     plugins: {
       legend: {
         position: "top" as const,
@@ -67,20 +75,30 @@ const GraficoMunicipios: React.FC = () => {
       boxShadow="lg"
       textAlign="center"
     >
-      <SimpleGrid columns={[1, 2]} spacing={6} width="100%"> 
-        {queimadasPorLote.map((lote, index) => (
-          <Box
-            key={index}
-            className="chart-box"
-            width="100%"
-            height="400px"
-            boxShadow="md" 
-            p={4} 
-          >
-            <Pie data={prepararDadosGrafico(lote)} options={options} />
-          </Box>
-        ))}
-      </SimpleGrid>
+      {Object.keys(dadosPorEstado).map((estado) => (
+        <Box key={estado} p={4} borderWidth="1px" borderRadius="md" mb={4}>
+          <h3>
+            <strong>Estado:</strong> {estado}
+          </h3>
+          <SimpleGrid columns={[1, 2]} spacing={6} width="100%">
+            {dadosPorEstado[estado].map((municipioData, index) => (
+              <Box
+                key={index}
+                className="chart-box"
+                width="100%"
+                height="400px"
+                boxShadow="md"
+                p={4}
+              >
+                <Pie
+                  data={prepararDadosGrafico([municipioData])}
+                  options={options}
+                />
+              </Box>
+            ))}
+          </SimpleGrid>
+        </Box>
+      ))}
     </Box>
   );
 };

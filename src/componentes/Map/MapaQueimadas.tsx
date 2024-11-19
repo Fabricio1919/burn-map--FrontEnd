@@ -1,7 +1,8 @@
 import React, { useEffect, useState } from "react";
 import { Box, Button, Text } from "@chakra-ui/react";
-import { MapContainer, TileLayer, Polygon, Popup } from "react-leaflet";
+import { MapContainer, TileLayer, Marker, Popup } from "react-leaflet";
 import "leaflet/dist/leaflet.css";
+import L from "leaflet"; // Importação necessária
 import {
   Modal,
   ModalOverlay,
@@ -12,20 +13,60 @@ import {
   ModalFooter,
   useDisclosure,
 } from "@chakra-ui/react";
-import { Queimada } from "../../api/types";
-import QueimadasService from "../../api/QueimadasService"; 
+import { AMQ } from "../../api/types";
+import QueimadasService from "../../api/QueimadasService";
 import GraficoMunicipios from "../Graficos/GraficoMunicipio";
 import ChatDenuncias from "./Charts/ChatDenuncias";
 
+// Ícone personalizado
+const redIcon = L.icon({
+  iconUrl: "https://img.icons8.com/?size=100&id=24801&format=png&color=FA5252", // Você pode usar um ícone diferente ou customizado
+  iconSize: [8, 8], // Tamanho bem pequeno para se assemelhar a um ponto
+  iconAnchor: [4, 4], // Centraliza o ícone no ponto
+  popupAnchor: [0, -4], // Ajusta a posição do popup
+  shadowSize: [0, 0], // Sem sombra para manter o visual limpo
+});
+
 const MapaQueimadas: React.FC = () => {
-  const [queimadas, setQueimadas] = useState<Queimada[]>([]);
-  const [queimadaSelecionada, setQueimadaSelecionada] = useState<Queimada | null>(null);
+  const [queimadas, setQueimadas] = useState<AMQ[]>([]);
+  const [queimadaSelecionada, setQueimadaSelecionada] = useState<AMQ | null>(
+    null
+  );
   const { isOpen, onOpen, onClose } = useDisclosure();
 
   useEffect(() => {
     const fetchQueimadas = async () => {
-      const data = await QueimadasService.getAll();
-      setQueimadas(data);
+      try {
+        const data = await QueimadasService.getAll();
+        if (Array.isArray(data)) {
+          const dadosFiltrados = data.filter(
+            (queimada) =>
+              queimada.Latitude !== undefined &&
+              queimada.Longitude !== undefined &&
+              typeof queimada.Latitude === "number" &&
+              typeof queimada.Longitude === "number" &&
+              queimada.Latitude >= -90 &&
+              queimada.Latitude <= 90 &&
+              queimada.Longitude >= -180 &&
+              queimada.Longitude <= 180
+          );
+
+          const dadosOrdenados = dadosFiltrados.sort((a, b) => {
+            const dataA = new Date(a.DataHora).getTime();
+            const dataB = new Date(b.DataHora).getTime();
+            return dataB - dataA;
+          });
+
+          const dadosLimitados = dadosOrdenados.slice(0, 1000);
+          setQueimadas(dadosLimitados);
+        } else {
+          console.error("Os dados retornados não são um array:", data);
+          setQueimadas([]);
+        }
+      } catch (error) {
+        console.error("Erro ao buscar queimadas:", error);
+        setQueimadas([]);
+      }
     };
     fetchQueimadas();
   }, []);
@@ -52,15 +93,10 @@ const MapaQueimadas: React.FC = () => {
       >
         <TileLayer url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png" />
         {queimadas.map((queimada, index) => (
-          <Polygon
+          <Marker
             key={index}
-            positions={[[queimada.latitude, queimada.longitude]]} 
-            pathOptions={{
-              fillColor: "red",
-              color: "red",
-              weight: 1,
-              fillOpacity: 0.7,
-            }}
+            position={[queimada.Latitude, queimada.Longitude]}
+            icon={redIcon} // Ícone vermelho
           >
             <Popup>
               <Box
@@ -72,13 +108,13 @@ const MapaQueimadas: React.FC = () => {
                 transition="0.2s"
               >
                 <Text fontWeight="bold">
-                  <strong>Estado:</strong> {queimada.estado}
+                  <strong>Estado:</strong> {queimada.Estado}
                 </Text>
                 <Text fontWeight="bold">
-                  <strong>Dias sem chuva:</strong> {queimada.dias_sem_chuva}
+                  <strong>Dias sem chuva:</strong> {queimada.DiasSemChuva}
                 </Text>
                 <Text fontWeight="bold">
-                  <strong>Intensidade:</strong> {queimada.frp} 
+                  <strong>Intensidade:</strong> {queimada.FRP}
                 </Text>
                 <Button
                   colorScheme="blue"
@@ -92,7 +128,7 @@ const MapaQueimadas: React.FC = () => {
                 </Button>
               </Box>
             </Popup>
-          </Polygon>
+          </Marker>
         ))}
       </MapContainer>
 

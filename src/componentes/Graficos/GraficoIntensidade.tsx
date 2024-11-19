@@ -2,17 +2,17 @@ import React, { useEffect, useState } from "react";
 import "chart.js/auto";
 import { Bar } from "react-chartjs-2";
 import { Box } from "@chakra-ui/react";
-import QueimadasService from "../../api/QueimadasService"; 
-import { Queimada } from "../../api/types"; 
+import QueimadasService from "../../api/QueimadasService";
+import { AMQ } from "../../api/types";
 
 const GraficoIntensidade: React.FC = () => {
-  const [queimadasPorLote, setQueimadasPorLote] = useState<Queimada[][]>([]);
+  const [queimadasPorLote, setQueimadasPorLote] = useState<AMQ[][]>([]);
 
   useEffect(() => {
     const fetchData = async () => {
       try {
         const data = await QueimadasService.getAll();
-        const dataOrdenada = data.sort((a, b) => b.precipita - a.precipita);
+        const dataOrdenada = data.sort((a, b) => b.Precipita - a.Precipita);
         const lotes = [];
         for (let i = 0; i < dataOrdenada.length; i += 25) {
           lotes.push(dataOrdenada.slice(i, i + 25));
@@ -25,13 +25,13 @@ const GraficoIntensidade: React.FC = () => {
     fetchData();
   }, []);
 
-  const prepararDadosGrafico = (lote: Queimada[]) => {
+  const prepararDadosGrafico = (lote: AMQ[]) => {
     return {
-      labels: lote.map((q) => q.municipio),
+      labels: lote.map((q) => q.Municipio),
       datasets: [
         {
           label: "Precipitação (mm)",
-          data: lote.map((q) => q.precipita), 
+          data: lote.map((q) => q.Precipita),
           backgroundColor: lote.map(
             () =>
               `rgba(${Math.random() * 255}, ${Math.random() * 255}, ${
@@ -47,11 +47,11 @@ const GraficoIntensidade: React.FC = () => {
     responsive: true,
     maintainAspectRatio: false,
     scales: {
-      y: { 
+      y: {
         beginAtZero: true,
         title: {
           display: true,
-          text: 'Precipitação (mm)',
+          text: "Precipitação (mm)",
         },
       },
     },
@@ -61,7 +61,7 @@ const GraficoIntensidade: React.FC = () => {
       },
       title: {
         display: true,
-        text: 'Precipitação das Queimadas por Municipio',
+        text: "Precipitação das Queimadas por Municipio",
       },
     },
   };
@@ -69,7 +69,13 @@ const GraficoIntensidade: React.FC = () => {
   return (
     <Box>
       {queimadasPorLote.map((lote, index) => (
-        <Box key={index} className="chart-box" width="100%" height="400px" mb={4}>
+        <Box
+          key={index}
+          className="chart-box"
+          width="100%"
+          height="400px"
+          mb={4}
+        >
           <Bar data={prepararDadosGrafico(lote)} options={options} />
         </Box>
       ))}
