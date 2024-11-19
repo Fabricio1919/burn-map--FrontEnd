@@ -60,7 +60,7 @@ const MapaQueimadas: React.FC = () => {
           const dadosLimitados = dadosOrdenados.slice(0, 1000);
           setQueimadas(dadosLimitados);
         } else {
-          console.error("Os dados retornados não são um array:", data);
+          console.error("Os dados retorados não são um array:", data);
           setQueimadas([]);
         }
       } catch (error) {
